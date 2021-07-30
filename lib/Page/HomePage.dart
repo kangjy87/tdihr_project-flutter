@@ -26,9 +26,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     slog.i("Flutter Sample : Web View (TDI Groupware)");
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('webview'.tr),
-      // ),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: WillPopScope(
           onWillPop: () => _goBack(context),

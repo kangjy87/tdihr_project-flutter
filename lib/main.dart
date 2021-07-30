@@ -42,20 +42,21 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: ListView(
-            children: [
-              Lottie.asset(
-                'assets/splash.json',
-                controller: _animationController,
-                // width: 200,
-                onLoaded: (composition) {
-                  _animationController
-                    ..duration = composition.duration
-                    ..reset()
-                    ..forward();
-                },
-              ),
-            ],
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.white,
+            child: Lottie.asset(
+              'assets/splash.json',
+              fit: BoxFit.contain,
+              controller: _animationController,
+              onLoaded: (composition) {
+                _animationController
+                  ..duration = composition.duration
+                  ..reset()
+                  ..forward();
+              },
+            ),
           ),
         ),
       );
