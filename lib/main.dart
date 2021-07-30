@@ -3,17 +3,17 @@ import 'package:hr_project_flutter/Page/HomePage.dart';
 import 'package:lottie/lottie.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainApp extends StatefulWidget {
+  const MainApp({Key? key}) : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _MainAppState createState() => _MainAppState();
 }
 
-class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
+class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   bool _showAnimation = true;
 

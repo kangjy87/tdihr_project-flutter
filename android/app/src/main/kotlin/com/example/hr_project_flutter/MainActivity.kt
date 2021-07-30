@@ -1,4 +1,4 @@
-package com.tdi.hr_project
+package com.tdi.hrproject
 
 import io.flutter.embedding.android.FlutterActivity
 
