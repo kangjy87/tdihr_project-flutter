@@ -1,8 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hr_project_flutter/Page/HomePage.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 
+import 'Page/Pages.dart';
+
 void main() async {
+  if (kReleaseMode == true)
+    Logger.level = Level.error;
+  else
+    Logger.level = Level.verbose;
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(
+      [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  await Firebase.initializeApp();
   runApp(const MainApp());
 }
 
@@ -61,9 +75,15 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
         ),
       );
     else
-      return MaterialApp(
+      return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        getPages: Pages.container,
+        initialRoute: '/signin',
+        defaultTransition: Transition.noTransition,
+        // home: TDIGroupwarePage(),
       );
   }
 }

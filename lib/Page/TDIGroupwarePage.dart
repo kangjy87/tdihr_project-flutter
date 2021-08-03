@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:hr_project_flutter/Utility/Logger.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-String selectedUrl = 'https://dev.groupware.tdi9.com';
+// String selectedUrl = 'https://dev.groupware.tdi9.com';
 
-class HomePage extends StatefulWidget {
+String loginToken = "";
+String selectedUrl = 'https://dev.groupware.tdi9.com/app/login/token/';
+
+class TDIGroupwarePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  TDIGroupwarePageState createState() => TDIGroupwarePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   late WebViewController _controller;
   final Completer<WebViewController> _controllerComplete =
       Completer<WebViewController>();
@@ -24,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    slog.i("Flutter Sample : Web View (TDI Groupware)");
+    slog.i("Flutter Sample : TDI Groupware");
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -32,14 +35,14 @@ class _HomePageState extends State<HomePage> {
           onWillPop: () => _goBack(context),
           child: WebView(
             userAgent: 'random',
-            initialUrl: selectedUrl,
+            initialUrl: selectedUrl + loginToken,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
             },
             onProgress: (int progress) {
-              slog.i("WebView is loading (progress : $progress%)");
+              slog.i("TDI Groupware is loading (progress : $progress%)");
             },
             javascriptChannels: <JavascriptChannel>{
               _toasterJavascriptChannel(context),

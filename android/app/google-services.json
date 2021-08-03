@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "153404377469",
+    "project_id": "tdi-hr-project",
+    "storage_bucket": "tdi-hr-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153404377469:android:9e6999cebacd3b79cfe414",
+        "android_client_info": {
+          "package_name": "com.tdi.groupware"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153404377469-49uohamue9g645nkt4cdiem0gvrr3b48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tdi.groupware",
+            "certificate_hash": "601bfa125554ebb7ca731f729d5df6e049b91a70"
+          }
+        },
+        {
+          "client_id": "153404377469-46mtbhquuu2mdc7u957posohltm7vsok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfD8_vrQDTG4VJe72tS8W6p2VUdhU_eiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153404377469-46mtbhquuu2mdc7u957posohltm7vsok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "153404377469-tb6a8uk0ll94upenj4a5cskimeh4jfmb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tdi.groupware"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
