@@ -27,7 +27,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
 
   @override
   Widget build(BuildContext context) {
-    slog.i("Flutter Sample : TDI Groupware");
+    slog.i("TDI Groupware Start ...");
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -38,6 +38,9 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
             initialUrl: selectedUrl + loginToken,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
+              webViewController
+                  .currentUrl()
+                  .then((value) => slog.i('tdi url : $value'));
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
             },

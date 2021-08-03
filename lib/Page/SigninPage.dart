@@ -66,8 +66,6 @@ class SigninPageState extends State<SigninPage> {
       var response = await Dio().post(tdiLoginUrl, data: tUser!.toData());
 
       if (response.statusCode == 200) {
-        slog.i(response);
-
         tUserToken = TDIUserToken.formJson(response.data);
         loginToken = tUserToken!.token;
 
@@ -126,7 +124,7 @@ class SigninPageState extends State<SigninPage> {
             tdiTitle(),
             SizedBox(height: 100),
             signinButton(),
-            SizedBox(height: 10),
+            // SizedBox(height: 1),
             if (email != "") goTDIGroupwareButton()
           ],
         ),
@@ -154,6 +152,7 @@ class SigninPageState extends State<SigninPage> {
         }
       },
       style: ButtonStyle(
+          // minimumSize: MaterialStateProperty.all(Size(double.infinity, 30)),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -161,9 +160,9 @@ class SigninPageState extends State<SigninPage> {
             side: BorderSide(color: const Color(0xffe8e8e8), width: 2),
           ))),
       child: Container(
-          width: 260,
-          // height: 30,
-          margin: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+          width: 300,
+          height: 30,
+          margin: EdgeInsets.only(top: 3, bottom: 3),
           alignment: Alignment.center,
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -194,9 +193,9 @@ class SigninPageState extends State<SigninPage> {
             side: BorderSide(color: const Color(0xffe8e8e8), width: 2),
           ))),
       child: Container(
-        width: 260,
+        width: 300,
         height: 30,
-        margin: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
         child: Text('TDI Groupware',
             style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
