@@ -42,6 +42,12 @@ class SigninPageState extends State<SigninPage> {
     return returnValue;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    if (fAuth.currentUser != null) googleSingIn();
+  }
+
   Future<bool> googleSingIn() async {
     try {
       final GoogleSignInAccount? gUser = await gSignIn.signIn();
@@ -114,8 +120,14 @@ class SigninPageState extends State<SigninPage> {
     slog.i("User Sign Out");
   }
 
+  // Future getCurrentUser() async {
+  //   // User? _user = FirebaseAuth.instance.currentUser;
+  //   return FirebaseAuth.instance.currentUser;
+  // }
+
   @override
   Widget build(BuildContext context) {
+    // if (fAuth.currentUser != null) googleSingIn();
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('TDI - Sign in with Google'),

@@ -48,7 +48,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-		setProperty("archivesBaseName", "tdi-hr-project-v$versionName-" + buildTime())
+		setProperty("archivesBaseName", "tdi-groupware-v$versionName-" + buildTime())
     }
 
     buildTypes {
