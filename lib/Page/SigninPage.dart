@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +63,12 @@ class SigninPageState extends State<SigninPage> {
       assert(fUser!.uid == curUser!.uid);
       idToken = await fUser!.getIdToken();
 
-      tUser =
-          TDIUser("google", fUser.uid, fUser.email!, fUser.displayName!, 'aos');
+      String platformOS = 'none';
+      if (Platform.isAndroid == true)
+        platformOS = 'aos';
+      else if (Platform.isIOS) platformOS = 'ios';
+      tUser = TDIUser(
+          "google", fUser.uid, fUser.email!, fUser.displayName!, platformOS);
       var response = await Dio().post(tdiLoginUrl, data: tUser!.toData());
 
       if (response.statusCode == 200) {
@@ -75,11 +81,7 @@ class SigninPageState extends State<SigninPage> {
           url = fUser.photoURL;
           uid = fUser.uid;
 
-          slog.i('email:' + email!);
-          slog.i('name:' + name!);
-          // slog.i('url:' + url!);
-          // slog.i('idToken:' + idToken!);
-          slog.i('uid:' + uid!);
+          slog.i('user info : ${tUser!.toJson()}');
           slog.i('token:' + loginToken);
         });
       } else {
