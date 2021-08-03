@@ -45,7 +45,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
               _controllerComplete.future.then((value) => _controller = value);
             },
             onProgress: (int progress) {
-              slog.i("TDI Groupware is loading (progress : $progress%)");
+              // slog.i("TDI Groupware is loading (progress : $progress%)");
             },
             javascriptChannels: <JavascriptChannel>{
               _toasterJavascriptChannel(context),
