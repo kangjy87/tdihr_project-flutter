@@ -79,9 +79,10 @@ class SigninPageState extends State<SigninPage> {
 
           slog.i('email:' + email!);
           slog.i('name:' + name!);
-          slog.i('url:' + url!);
-          slog.i('idToken:' + idToken!);
+          // slog.i('url:' + url!);
+          // slog.i('idToken:' + idToken!);
           slog.i('uid:' + uid!);
+          slog.i('token:' + loginToken);
         });
       } else {
         slog.e(response);
