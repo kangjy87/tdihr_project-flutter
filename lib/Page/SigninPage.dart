@@ -1,15 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hr_project_flutter/Page/TDIGroupwarePage.dart';
-import 'package:hr_project_flutter/Page/TDIUser.dart';
-import 'package:hr_project_flutter/Utility/Logger.dart';
-
-String tdiLoginUrl = 'https://dev.groupware.tdi9.com/api/app/auth';
+import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/ToastMessage.dart';
+import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:hr_project_flutter/General/Logger.dart';
 
 class SigninPage extends StatefulWidget {
   @override
@@ -19,18 +19,13 @@ class SigninPage extends StatefulWidget {
 class SigninPageState extends State<SigninPage> {
   final FirebaseAuth fAuth = FirebaseAuth.instance;
   final GoogleSignIn gSignIn = GoogleSignIn();
-
-  TDIUser? tUser;
-  TDIUserToken? tUserToken;
-
-  User? curUser;
-  String? name = "";
-  String? email = "";
-  String? url = "";
-  String? idToken = "";
-  String? uid = "";
+  User? fCurUser;
+  String? urlPhoto = "";
+  String? idTokenGoogle = "";
 
   String? _lastFirebaseResponse = "";
+  bool readUserJSON = false;
+  bool readUserTokenJSON = false;
 
   setLastFBMessage(String msg) {
     _lastFirebaseResponse = msg;
@@ -45,7 +40,22 @@ class SigninPageState extends State<SigninPage> {
   @override
   void initState() {
     super.initState();
-    if (fAuth.currentUser != null) googleSingIn();
+
+    readText(COMMON.FILE_USER_JSON).then((json) => {
+          COMMON.TDI_USER = TDIUser.formJson(jsonDecode(json)),
+          setState(() {
+            readUserJSON = COMMON.TDI_USER != null;
+          })
+        });
+
+    readText(COMMON.FILE_USER_TOKEN_JSON).then((json) => {
+          COMMON.TDI_TOKEN = TDIToken.formJson(jsonDecode(json)),
+          setState(() {
+            readUserTokenJSON = COMMON.TDI_USER != null;
+            if (readUserTokenJSON == true)
+              Get.toNamed(COMMON.PAGE_TDI_GROUPWARE);
+          })
+        });
   }
 
   Future<bool> googleSingIn() async {
@@ -65,33 +75,33 @@ class SigninPageState extends State<SigninPage> {
       // ignore: unnecessary_null_comparison
       assert(await fUser!.getIdToken() != null);
 
-      curUser = fAuth.currentUser;
-      assert(fUser!.uid == curUser!.uid);
-      idToken = await fUser!.getIdToken();
+      fCurUser = fAuth.currentUser;
+      assert(fUser!.uid == fCurUser!.uid);
+      idTokenGoogle = await fUser!.getIdToken();
 
-      String platformOS = 'none';
+      String platformOS = COMMON.OS_NONE;
       if (Platform.isAndroid == true)
-        platformOS = 'aos';
-      else if (Platform.isIOS) platformOS = 'ios';
-      tUser = TDIUser(
-          "google", fUser.uid, fUser.email!, fUser.displayName!, platformOS);
-      var response = await Dio().post(tdiLoginUrl, data: tUser!.toData());
+        platformOS = COMMON.OS_AOS;
+      else if (Platform.isIOS) platformOS = COMMON.OS_IOS;
+      COMMON.TDI_USER = TDIUser(COMMON.PROVIDER_GOOGLE, fUser.uid, fUser.email!,
+          fUser.displayName!, platformOS);
+      var response = await Dio()
+          .post(COMMON.URL_TDI_LOGIN, data: COMMON.TDI_USER!.toData());
 
       if (response.statusCode == 200) {
-        tUserToken = TDIUserToken.formJson(response.data);
-        loginToken = tUserToken!.token;
+        COMMON.TDI_TOKEN = TDIToken.formJson(response.data);
+
+        writeJSON(COMMON.FILE_USER_JSON, COMMON.TDI_USER!.toJson());
+        writeJSON(COMMON.FILE_USER_TOKEN_JSON, COMMON.TDI_TOKEN!.toJson());
+        slog.i('user info : ${COMMON.TDI_USER!.toJson()}');
+        slog.i('token:' + COMMON.TDI_TOKEN!.token);
 
         setState(() {
-          name = fUser.displayName;
-          email = fUser.email;
-          url = fUser.photoURL;
-          uid = fUser.uid;
-
-          slog.i('user info : ${tUser!.toJson()}');
-          slog.i('token:' + loginToken);
+          urlPhoto = fUser.photoURL;
         });
       } else {
         slog.e(response);
+        toastMessage(COMMON.ERROR_LOGIN);
         return false;
       }
 
@@ -101,6 +111,7 @@ class SigninPageState extends State<SigninPage> {
       List<String> result = e.toString().split(", ");
       setLastFBMessage(result[0]);
       googleSignOut();
+      toastMessage(COMMON.ERROR_LOGIN);
       return false;
     }
   }
@@ -109,25 +120,22 @@ class SigninPageState extends State<SigninPage> {
     await fAuth.signOut();
     await gSignIn.signOut();
 
+    deleteFile(COMMON.FILE_USER_JSON);
+    deleteFile(COMMON.FILE_USER_TOKEN_JSON);
+
+    COMMON.TDI_USER = null;
+    COMMON.TDI_TOKEN = null;
+
     setState(() {
-      name = "";
-      email = "";
-      url = "";
-      idToken = "";
-      uid = "";
+      urlPhoto = "";
+      idTokenGoogle = "";
     });
 
     slog.i("User Sign Out");
   }
 
-  // Future getCurrentUser() async {
-  //   // User? _user = FirebaseAuth.instance.currentUser;
-  //   return FirebaseAuth.instance.currentUser;
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // if (fAuth.currentUser != null) googleSingIn();
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('TDI - Sign in with Google'),
@@ -138,8 +146,8 @@ class SigninPageState extends State<SigninPage> {
             tdiTitle(),
             SizedBox(height: 100),
             signinButton(),
-            // SizedBox(height: 1),
-            if (email != "") goTDIGroupwareButton()
+            SizedBox(height: 1),
+            if (COMMON.TDI_TOKEN != null) goTDIGroupwareButton()
           ],
         ),
       ),
@@ -150,7 +158,7 @@ class SigninPageState extends State<SigninPage> {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
       child: Image.asset(
-        'assets/tdi_img.png',
+        COMMON.ASSET_TDI_LOGO,
         width: 200,
       ),
     );
@@ -159,14 +167,14 @@ class SigninPageState extends State<SigninPage> {
   Widget signinButton() {
     return ElevatedButton(
       onPressed: () {
-        if (email == "") {
-          googleSingIn();
+        if (COMMON.TDI_TOKEN == null) {
+          googleSingIn().then((value) =>
+              {if (value == true) Get.toNamed(COMMON.PAGE_TDI_GROUPWARE)});
         } else {
           googleSignOut();
         }
       },
       style: ButtonStyle(
-          // minimumSize: MaterialStateProperty.all(Size(double.infinity, 30)),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
@@ -182,13 +190,13 @@ class SigninPageState extends State<SigninPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
-                  'assets/google.png',
+                  COMMON.ASSET_GOOGLE,
                   height: 30,
                 ),
                 Text(
-                    email == ""
-                        ? 'Sign in with Google'
-                        : email.toString() + " Sign out",
+                    COMMON.TDI_USER == null
+                        ? COMMON.LOGIN_GOOGLE
+                        : COMMON.TDI_USER!.email + " " + COMMON.LOGOUT,
                     style:
                         const TextStyle(color: Color(0xff454f63), fontSize: 15),
                     textAlign: TextAlign.center),
@@ -198,7 +206,7 @@ class SigninPageState extends State<SigninPage> {
 
   Widget goTDIGroupwareButton() {
     return ElevatedButton(
-      onPressed: () => Get.toNamed('/tdi_groupware'),
+      onPressed: () => Get.toNamed(COMMON.PAGE_TDI_GROUPWARE),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -211,7 +219,7 @@ class SigninPageState extends State<SigninPage> {
         height: 30,
         margin: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        child: Text('TDI Groupware',
+        child: Text(COMMON.TDI_GROUPWARE,
             style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
             textAlign: TextAlign.center),
       ),

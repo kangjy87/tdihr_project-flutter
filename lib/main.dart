@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
-
 import 'Page/Pages.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 
 void main() async {
   if (kReleaseMode == true)
@@ -61,7 +61,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
             width: double.infinity,
             color: Colors.white,
             child: Lottie.asset(
-              'assets/splash.json',
+              COMMON.ASSET_LOTTIE_SPLASH,
               fit: BoxFit.contain,
               controller: _animationController,
               onLoaded: (composition) {
@@ -81,7 +81,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
           primarySwatch: Colors.blueGrey,
         ),
         getPages: Pages.container,
-        initialRoute: '/signin',
+        initialRoute: COMMON.PAGE_SIGNIN,
         defaultTransition: Transition.noTransition,
         // home: TDIGroupwarePage(),
       );
