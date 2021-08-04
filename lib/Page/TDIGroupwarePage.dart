@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:hr_project_flutter/Utility/Logger.dart';
+import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-// String selectedUrl = 'https://dev.groupware.tdi9.com';
-
-String loginToken = "";
-String selectedUrl = 'https://dev.groupware.tdi9.com/app/login/token/';
+import 'package:hr_project_flutter/General/Common.dart';
 
 class TDIGroupwarePage extends StatefulWidget {
   @override
@@ -35,21 +31,31 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
           onWillPop: () => _goBack(context),
           child: WebView(
             userAgent: 'random',
-            initialUrl: selectedUrl + loginToken,
+            initialUrl: COMMON.URL_TDI_HOME + COMMON.TDI_TOKEN!.token,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               webViewController
                   .currentUrl()
-                  .then((value) => slog.i('tdi url : $value'));
+                  .then((value) => slog.i('web view url : $value'));
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
-            },
-            onProgress: (int progress) {
-              // slog.i("TDI Groupware is loading (progress : $progress%)");
             },
             javascriptChannels: <JavascriptChannel>{
               _toasterJavascriptChannel(context),
             },
+            // onProgress: (int progress) {
+            //   slog.i("TDI Groupware is loading (progress : $progress%)");
+            // },
+            // onPageStarted: (String url) {
+            //   slog.i('page started $url');
+            // },
+            // onPageFinished: (String url) {
+            //   slog.i('page finished $url');
+            // },
+            // navigationDelegate: (NavigationRequest request) {
+            //   slog.i('allowing navigation to $request');
+            //   return NavigationDecision.navigate;
+            // },
           ),
         ),
       ),

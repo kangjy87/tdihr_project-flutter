@@ -33,11 +33,11 @@ class TDIUser {
   }
 }
 
-class TDIUserToken {
+class TDIToken {
   final String token;
 
-  TDIUserToken(this.token);
+  TDIToken(this.token);
 
-  TDIUserToken.formJson(Map<String, dynamic> json) : token = json['token'];
+  TDIToken.formJson(Map<String, dynamic> json) : token = json['token'];
   Map<String, dynamic> toJson() => {'token': token};
 }
