@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 
@@ -28,7 +28,7 @@ class AuthManager {
     return returnValue;
   }
 
-  Future<int> googleSingIn() async {
+  Future<RESULT_TYPE> googleSingIn() async {
     try {
       final GoogleSignInAccount? gUser = await gSignIn.signIn();
       final GoogleSignInAuthentication gAuth = await gUser!.authentication;
@@ -44,37 +44,37 @@ class AuthManager {
       assert(fUser!.uid == fCurUser!.uid);
       idTokenGoogle = await fUser!.getIdToken();
 
-      String platformOS = COMMON.OS_NONE;
+      String platformOS = OS_TYPE.NONE.convertString;
       if (Platform.isAndroid == true)
-        platformOS = COMMON.OS_AOS;
-      else if (Platform.isIOS) platformOS = COMMON.OS_IOS;
-      COMMON.TDI_USER = TDIUser(COMMON.PROVIDER_GOOGLE, fUser.uid, fUser.email!,
+        platformOS = OS_TYPE.AOS.convertString;
+      else if (Platform.isIOS) platformOS = OS_TYPE.IOS.convertString;
+      TDIUser.account = TDIAccount(PROVIDERS.google, fUser.uid, fUser.email!,
           fUser.displayName!, platformOS);
-      var response = await Dio()
-          .post(COMMON.URL_TDI_LOGIN, data: COMMON.TDI_USER!.toData());
+      var response =
+          await Dio().post(URL.tdiAuth, data: TDIUser.account!.toData());
 
       if (response.statusCode == 200) {
-        COMMON.TDI_TOKEN = TDIToken.formJson(response.data);
+        TDIUser.token = TDIToken.formJson(response.data);
 
-        writeJSON(COMMON.FILE_USER_JSON, COMMON.TDI_USER!.toJson());
-        writeJSON(COMMON.FILE_USER_TOKEN_JSON, COMMON.TDI_TOKEN!.toJson());
+        writeJSON(TDIUser.fileAccountJson, TDIUser.account!.toJson());
+        writeJSON(TDIUser.fileTokenJson, TDIUser.token!.toJson());
 
         urlPhoto = fUser.photoURL;
 
-        slog.i('user info : ${COMMON.TDI_USER!.toJson()}');
-        slog.i('token:' + COMMON.TDI_TOKEN!.token);
+        slog.i('user info : ${TDIUser.account!.toJson()}');
+        slog.i('token:' + TDIUser.token!.token);
       } else {
         slog.e(response);
-        return COMMON.LOGIN_FAILED;
+        return RESULT_TYPE.FAILED;
       }
 
-      return COMMON.LOGIN_SUCCESS;
+      return RESULT_TYPE.SUCCESS;
     } on Exception catch (e) {
       slog.e(e.toString());
       List<String> result = e.toString().split(", ");
       authManager.setLastFBMessage(result[0]);
       googleSignOut();
-      return COMMON.LOGIN_EXCEPTION;
+      return RESULT_TYPE.EXCEPTION;
     }
   }
 

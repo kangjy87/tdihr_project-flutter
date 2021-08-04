@@ -1,13 +1,15 @@
-class TDIUser {
+import 'package:hr_project_flutter/General/FileIO.dart';
+
+class TDIAccount {
   final String provider;
   final String token;
   final String email;
   final String name;
   final String os;
 
-  TDIUser(this.provider, this.token, this.email, this.name, this.os);
+  TDIAccount(this.provider, this.token, this.email, this.name, this.os);
 
-  TDIUser.formJson(Map<String, dynamic> json)
+  TDIAccount.formJson(Map<String, dynamic> json)
       : provider = json['provider'],
         token = json['token'],
         email = json['email'],
@@ -40,4 +42,23 @@ class TDIToken {
 
   TDIToken.formJson(Map<String, dynamic> json) : token = json['token'];
   Map<String, dynamic> toJson() => {'token': token};
+}
+
+class TDIUser {
+  static String fileAccountJson = 'user.json';
+  static String fileTokenJson = 'usert.json';
+
+  static TDIAccount? account;
+  static TDIToken? token;
+  static bool readUserJSON = false;
+  static bool readUserTokenJSON = false;
+
+  static void clearLoginData() {
+    deleteFile(fileAccountJson);
+    deleteFile(fileTokenJson);
+    account = null;
+    token = null;
+    readUserJSON = false;
+    readUserTokenJSON = false;
+  }
 }
