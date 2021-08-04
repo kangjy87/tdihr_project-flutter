@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:hr_project_flutter/General/Logger.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/Logger.dart';
+import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class TDIGroupwarePage extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
           onWillPop: () => _goBack(context),
           child: WebView(
             userAgent: 'random',
-            initialUrl: COMMON.URL_TDI_HOME + COMMON.TDI_TOKEN!.token,
+            initialUrl: URL.tdiLogin + TDIUser.token!.token,
             javascriptMode: JavascriptMode.unrestricted,
             onWebViewCreated: (WebViewController webViewController) {
               webViewController

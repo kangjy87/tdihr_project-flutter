@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/AuthManager.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/General/ToastMessage.dart';
+import 'package:hr_project_flutter/Page/Pages.dart';
 
 class SigninPage extends StatefulWidget {
   @override
@@ -17,19 +18,19 @@ class SigninPageState extends State<SigninPage> {
   void initState() {
     super.initState();
 
-    readText(COMMON.FILE_USER_JSON).then((json) => {
-          COMMON.TDI_USER = TDIUser.formJson(jsonDecode(json)),
+    readText(TDIUser.fileAccountJson).then((json) => {
+          TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
           setState(() {
-            COMMON.readUserJSON = COMMON.TDI_USER != null;
+            TDIUser.readUserJSON = TDIUser.account != null;
           })
         });
 
-    readText(COMMON.FILE_USER_TOKEN_JSON).then((json) => {
-          COMMON.TDI_TOKEN = TDIToken.formJson(jsonDecode(json)),
+    readText(TDIUser.fileTokenJson).then((json) => {
+          TDIUser.token = TDIToken.formJson(jsonDecode(json)),
           setState(() {
-            COMMON.readUserTokenJSON = COMMON.TDI_USER != null;
-            if (COMMON.readUserTokenJSON == true)
-              Get.toNamed(COMMON.PAGE_TDI_GROUPWARE);
+            TDIUser.readUserTokenJSON = TDIUser.account != null;
+            if (TDIUser.readUserTokenJSON == true)
+              Get.toNamed(PAGES.tdiGroupware);
           })
         });
   }
@@ -47,25 +48,25 @@ class SigninPageState extends State<SigninPage> {
             SizedBox(height: 100),
             _buttonSignin(),
             SizedBox(height: 1),
-            if (COMMON.TDI_TOKEN != null) _buttonTDIGroupware()
+            if (TDIUser.token != null) _buttonTDIGroupware()
           ],
         ),
       ),
     );
   }
 
-  void _login(int result) {
+  void _login(RESULT_TYPE result) {
     switch (result) {
-      case COMMON.LOGIN_SUCCESS:
-        Get.toNamed(COMMON.PAGE_TDI_GROUPWARE);
+      case RESULT_TYPE.SUCCESS:
+        Get.toNamed(PAGES.tdiGroupware);
         break;
-      case COMMON.LOGIN_FAILED:
-        COMMON.clearLoginData();
-        toastMessage(COMMON.ERROR_LOGIN);
+      case RESULT_TYPE.FAILED:
+        TDIUser.clearLoginData();
+        toastMessage(MESSAGES.errLogin);
         break;
-      case COMMON.LOGIN_EXCEPTION:
-        COMMON.clearLoginData();
-        toastMessage(COMMON.ERROR_LOGIN);
+      case RESULT_TYPE.EXCEPTION:
+        TDIUser.clearLoginData();
+        toastMessage(MESSAGES.errLogin);
         break;
       default:
     }
@@ -75,7 +76,7 @@ class SigninPageState extends State<SigninPage> {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
       child: Image.asset(
-        COMMON.ASSET_TDI_LOGO,
+        ASSETS.tdiLogo,
         width: 200,
       ),
     );
@@ -84,7 +85,7 @@ class SigninPageState extends State<SigninPage> {
   Widget _buttonSignin() {
     return ElevatedButton(
       onPressed: () {
-        if (COMMON.TDI_TOKEN == null) {
+        if (TDIUser.token == null) {
           authManager.googleSingIn().then((value) => {
                 setState(() {}),
                 _login(value),
@@ -92,7 +93,7 @@ class SigninPageState extends State<SigninPage> {
         } else {
           authManager.googleSignOut().then((value) => {
                 setState(() {}),
-                COMMON.clearLoginData(),
+                TDIUser.clearLoginData(),
               });
         }
       },
@@ -114,13 +115,13 @@ class SigninPageState extends State<SigninPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              COMMON.ASSET_GOOGLE,
+              ASSETS.googleLogo,
               height: 30,
             ),
             Text(
-                COMMON.TDI_USER == null
-                    ? COMMON.LOGIN_GOOGLE
-                    : COMMON.TDI_USER!.email + " " + COMMON.LOGOUT,
+                TDIUser.account == null
+                    ? STRINGS.googleLogin
+                    : TDIUser.account!.email + " " + STRINGS.logout,
                 style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
                 textAlign: TextAlign.center),
           ],
@@ -131,7 +132,7 @@ class SigninPageState extends State<SigninPage> {
 
   Widget _buttonTDIGroupware() {
     return ElevatedButton(
-      onPressed: () => Get.toNamed(COMMON.PAGE_TDI_GROUPWARE),
+      onPressed: () => Get.toNamed(PAGES.tdiGroupware),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -154,7 +155,7 @@ class SigninPageState extends State<SigninPage> {
             //   height: 20,
             // ),
             // SizedBox(width: 30),
-            Text(COMMON.TDI_GROUPWARE,
+            Text(STRINGS.tdiGroupware,
                 style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
                 textAlign: TextAlign.center),
           ],
