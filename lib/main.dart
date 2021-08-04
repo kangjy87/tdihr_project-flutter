@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
-import 'Page/Pages.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 
 void main() async {
@@ -50,40 +50,48 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  MaterialApp _splashScreen() {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.white,
+          child: Lottie.asset(
+            COMMON.ASSET_LOTTIE_SPLASH,
+            fit: BoxFit.contain,
+            controller: _animationController,
+            onLoaded: (composition) {
+              _animationController
+                ..duration = composition.duration
+                ..reset()
+                ..forward();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  GetMaterialApp _mainTitle() {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+      ),
+      getPages: Pages.container,
+      initialRoute: COMMON.PAGE_TITLE,
+      defaultTransition: Transition.noTransition,
+      // home: TDIGroupwarePage(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_showAnimation == true)
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            color: Colors.white,
-            child: Lottie.asset(
-              COMMON.ASSET_LOTTIE_SPLASH,
-              fit: BoxFit.contain,
-              controller: _animationController,
-              onLoaded: (composition) {
-                _animationController
-                  ..duration = composition.duration
-                  ..reset()
-                  ..forward();
-              },
-            ),
-          ),
-        ),
-      );
+      return _splashScreen();
     else
-      return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        getPages: Pages.container,
-        initialRoute: COMMON.PAGE_SIGNIN,
-        defaultTransition: Transition.noTransition,
-        // home: TDIGroupwarePage(),
-      );
+      return _mainTitle();
   }
 }

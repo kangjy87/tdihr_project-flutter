@@ -1,3 +1,5 @@
+import 'package:hr_project_flutter/General/FileIO.dart';
+
 import 'TDIUser.dart';
 
 class COMMON {
@@ -11,7 +13,7 @@ class COMMON {
   static String URL_TDI_HOME =
       'https://dev.groupware.tdi9.com/app/login/token/';
 
-  static String PAGE_SIGNIN = '/page_signin';
+  static String PAGE_TITLE = '/page_title';
   static String PAGE_TDI_GROUPWARE = '/page_tdi_groupware';
 
   static String TDI_GROUPWARE = 'TDI Groupware';
@@ -27,6 +29,21 @@ class COMMON {
   static String ASSET_TDI_LOGO = 'assets/tdi_img.png';
   static String ASSET_GOOGLE = 'assets/google.png';
 
-  static TDIUser? TDI_USER;
-  static TDIToken? TDI_TOKEN;
+  static TDIUser? TDI_USER = null;
+  static TDIToken? TDI_TOKEN = null;
+  static bool readUserJSON = false;
+  static bool readUserTokenJSON = false;
+
+  static void clearLoginData() {
+    deleteFile(FILE_USER_JSON);
+    deleteFile(FILE_USER_TOKEN_JSON);
+    TDI_USER = null;
+    TDI_TOKEN = null;
+    readUserJSON = false;
+    readUserTokenJSON = false;
+  }
+
+  static const int LOGIN_SUCCESS = 1;
+  static const int LOGIN_FAILED = 2;
+  static const int LOGIN_EXCEPTION = 3;
 }
