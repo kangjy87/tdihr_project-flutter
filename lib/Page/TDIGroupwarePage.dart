@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
@@ -32,45 +34,58 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
           onWillPop: () => _goBack(context),
           child: WebView(
             userAgent: 'random',
-            initialUrl: URL.tdiLogin + TDIUser.token!.token,
-            javascriptMode: JavascriptMode.unrestricted,
-            onWebViewCreated: (WebViewController webViewController) {
-              webViewController
-                  .currentUrl()
-                  .then((value) => slog.i('web view url : $value'));
+            // initialUrl: URL.tdiLogin + TDIUser.token!.token,
+            // onWebViewCreated: (WebViewController webViewController) {
+            //   _controllerComplete.complete(webViewController);
+            //   _controllerComplete.future.then((value) => _controller = value);
+            // },
+            initialUrl: '',
+            onWebViewCreated: (WebViewController webViewController) async {
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
+              await loadHtmlFromAssets(
+                  'assets/javascriptWebView.html', webViewController);
             },
+            javascriptMode: JavascriptMode.unrestricted,
+            gestureNavigationEnabled: true,
             javascriptChannels: <JavascriptChannel>{
-              _toasterJavascriptChannel(context),
+              _javascriptChannel(context),
             },
             // onProgress: (int progress) {
             //   slog.i("TDI Groupware is loading (progress : $progress%)");
             // },
-            // onPageStarted: (String url) {
-            //   slog.i('page started $url');
-            // },
-            // onPageFinished: (String url) {
-            //   slog.i('page finished $url');
-            // },
-            // navigationDelegate: (NavigationRequest request) {
-            //   slog.i('allowing navigation to $request');
-            //   return NavigationDecision.navigate;
-            // },
+            onPageStarted: (String url) {
+              slog.i('page started $url');
+            },
+            onPageFinished: (String url) {
+              slog.i('page finished $url');
+            },
+            navigationDelegate: (NavigationRequest request) {
+              slog.i('allowing navigation to $request');
+              return NavigationDecision.navigate;
+            },
           ),
         ),
       ),
     );
   }
 
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+  Future<void> loadHtmlFromAssets(String filename, controller) async {
+    String fileText = await rootBundle.loadString(filename);
+    controller.loadUrl(Uri.dataFromString(fileText,
+            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        .toString());
+  }
+
+  JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
-        name: 'Toaster',
+        name: '_webToAppLogout',
         onMessageReceived: (JavascriptMessage message) {
+          slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
           // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
+          // Scaffold.of(context).showSnackBar(
+          //   SnackBar(content: Text(message.message)),
+          // );
         });
   }
 
