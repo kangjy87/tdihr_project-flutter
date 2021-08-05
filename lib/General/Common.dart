@@ -10,9 +10,9 @@ extension OSTypeExt on OS_TYPE {
       case OS_TYPE.NONE:
         return 'none';
       case OS_TYPE.AOS:
-        return 'none';
+        return 'aos';
       case OS_TYPE.IOS:
-        return 'none';
+        return 'ios';
       default:
         return '';
     }
@@ -20,9 +20,9 @@ extension OSTypeExt on OS_TYPE {
 }
 
 enum RESULT_TYPE {
-  SUCCESS,
-  FAILED,
-  EXCEPTION,
+  LOGIN_SUCCESS,
+  LOGIN_FAILED,
+  LOGIN_EMAIL_ERROR,
 }
 
 class PROVIDERS {
@@ -41,11 +41,13 @@ class URL {
 }
 
 class MESSAGES {
-  static String errLogin = '회사메일로 로그인 하세요.';
+  static String errLoginEmail = '회사메일로 로그인 하세요.';
+  static String errLoginFailed = '로그인 실패 했습니다.';
 }
 
 class STRINGS {
   static String tdiGroupware = 'TDI Groupware';
   static String googleLogin = '구글 로그인(회사메일)';
+  static String signining = '로그인중 입니다 ...';
   static String logout = '로그아웃';
 }

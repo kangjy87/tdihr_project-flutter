@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TDIGroupwarePage extends StatefulWidget {
@@ -34,18 +36,18 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
           onWillPop: () => _goBack(context),
           child: WebView(
             userAgent: 'random',
-            // initialUrl: URL.tdiLogin + TDIUser.token!.token,
-            // onWebViewCreated: (WebViewController webViewController) {
-            //   _controllerComplete.complete(webViewController);
-            //   _controllerComplete.future.then((value) => _controller = value);
-            // },
-            initialUrl: '',
-            onWebViewCreated: (WebViewController webViewController) async {
+            initialUrl: URL.tdiLogin + TDIUser.token!.token,
+            onWebViewCreated: (WebViewController webViewController) {
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
-              await loadHtmlFromAssets(
-                  'assets/javascriptWebView.html', webViewController);
             },
+            // initialUrl: '',
+            // onWebViewCreated: (WebViewController webViewController) async {
+            //   _controllerComplete.complete(webViewController);
+            //   _controllerComplete.future.then((value) => _controller = value);
+            //   await loadHtmlFromAssets(
+            //       'assets/javascriptWebView.html', webViewController);
+            // },
             javascriptMode: JavascriptMode.unrestricted,
             gestureNavigationEnabled: true,
             javascriptChannels: <JavascriptChannel>{
@@ -82,10 +84,6 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
         name: '_webToAppLogout',
         onMessageReceived: (JavascriptMessage message) {
           slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
-          // ignore: deprecated_member_use
-          // Scaffold.of(context).showSnackBar(
-          //   SnackBar(content: Text(message.message)),
-          // );
         });
   }
 
@@ -94,7 +92,8 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
       _controller.goBack();
       return Future.value(false);
     } else {
-      return Future.value(true);
+      Get.toNamed(PAGES.title);
+      return Future.value(false);
     }
   }
 }
