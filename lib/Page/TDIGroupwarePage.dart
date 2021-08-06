@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
@@ -41,13 +42,15 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
               _controllerComplete.complete(webViewController);
               _controllerComplete.future.then((value) => _controller = value);
             },
+            // javascript channel test
             // initialUrl: '',
             // onWebViewCreated: (WebViewController webViewController) async {
             //   _controllerComplete.complete(webViewController);
             //   _controllerComplete.future.then((value) => _controller = value);
             //   await loadHtmlFromAssets(
-            //       'assets/javascriptWebView.html', webViewController);
+            //       'assets/javascriptChannelTest.html', webViewController);
             // },
+            //
             javascriptMode: JavascriptMode.unrestricted,
             gestureNavigationEnabled: true,
             javascriptChannels: <JavascriptChannel>{
@@ -84,6 +87,10 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
         name: '_webToAppLogout',
         onMessageReceived: (JavascriptMessage message) {
           slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
+          authManager.googleSignOut().then((value) => {
+                TDIUser.clearLoginData(),
+                Get.toNamed(PAGES.title),
+              });
         });
   }
 

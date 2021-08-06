@@ -21,22 +21,33 @@ class TitlePageState extends State<TitlePage> {
       //   title: Text('TDI - Sign in with Google'),
       // ),
       body: SafeArea(
-        child: Center(
-          child: WillPopScope(
-            onWillPop: () => _goBack(context),
-            child: Column(
-              children: <Widget>[
-                _tdiTitle(),
-                SizedBox(height: 100),
-                _buttonSignin(),
-                SizedBox(height: 1),
-                if (_signining == true)
-                  _progressSinin()
-                else if (TDIUser.isAleadyLogin == true)
-                  _buttonTDIGroupware()
-              ],
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: WillPopScope(
+                onWillPop: () => _goBack(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _tdiTitle(),
+                    SizedBox(height: 100),
+                    _buttonSignin(),
+                    SizedBox(height: 1),
+                    if (_signining == true)
+                      _progressSinin()
+                    else if (TDIUser.isAleadyLogin == true)
+                      _buttonTDIGroupware(),
+                  ],
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Text('ver. $appVersion'),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'package:package_info/package_info.dart';
+
 enum OS_TYPE {
   NONE,
   AOS,
@@ -50,4 +52,18 @@ class STRINGS {
   static String googleLogin = '구글 로그인(회사메일)';
   static String signining = '로그인중 입니다 ...';
   static String logout = '로그아웃';
+}
+
+String appName = '';
+String packageName = '';
+String appVersion = '';
+String buildNumber = '';
+
+void readPackageInfo() {
+  PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    appName = packageInfo.appName;
+    packageName = packageInfo.packageName;
+    appVersion = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
+  });
 }

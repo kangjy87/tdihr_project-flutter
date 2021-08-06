@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
@@ -50,6 +51,8 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
             TDIUser.readUserTokenJSON = TDIUser.account != null;
           })
         });
+
+    readPackageInfo();
   }
 
   GetMaterialApp _splashScreen() {
@@ -57,6 +60,7 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        fontFamily: 'TmoneyRoundWind',
       ),
       getPages: Pages.container,
       initialRoute: PAGES.splash,
