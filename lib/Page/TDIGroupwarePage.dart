@@ -36,43 +36,58 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
       body: SafeArea(
         child: WillPopScope(
           onWillPop: () => _goBack(context),
-          child: WebView(
-            // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-            initialUrl: URL.tdiLogin + TDIUser.token!.token,
-            onWebViewCreated: (WebViewController webViewController) {
-              _controllerComplete.complete(webViewController);
-              _controllerComplete.future.then((value) => _controller = value);
-            },
-            // javascript channel test
-            // initialUrl: '',
-            // onWebViewCreated: (WebViewController webViewController) async {
-            //   _controllerComplete.complete(webViewController);
-            //   _controllerComplete.future.then((value) => _controller = value);
-            //   await loadHtmlFromAssets(
-            //       'assets/javascriptChannelTest.html', webViewController);
-            // },
-            //
-            javascriptMode: JavascriptMode.unrestricted,
-            gestureNavigationEnabled: true,
-            javascriptChannels: <JavascriptChannel>{
-              _javascriptChannel(context),
-            },
-            // onProgress: (int progress) {
-            //   slog.i("TDI Groupware is loading (progress : $progress%)");
-            // },
-            onPageStarted: (String url) {
-              slog.i('page started $url');
-            },
-            onPageFinished: (String url) {
-              slog.i('page finished $url');
-            },
-            navigationDelegate: (NavigationRequest request) {
-              slog.i('allowing navigation to ${request.url}');
-              _checkLogin(request.url);
-              return NavigationDecision.navigate;
-            },
-          ),
+          child: _buildWebView(),
         ),
+      ),
+      floatingActionButton: _buildFloatingActionButtonOnyIOS(),
+    );
+  }
+
+  Widget _buildWebView() {
+    return WebView(
+      // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
+      initialUrl: URL.tdiLogin + TDIUser.token!.token,
+      onWebViewCreated: (WebViewController webViewController) {
+        _controllerComplete.complete(webViewController);
+        _controllerComplete.future.then((value) => _controller = value);
+      },
+      // javascript channel test
+      // initialUrl: '',
+      // onWebViewCreated: (WebViewController webViewController) async {
+      //   _controllerComplete.complete(webViewController);
+      //   _controllerComplete.future.then((value) => _controller = value);
+      //   await loadHtmlFromAssets(
+      //       'assets/javascriptChannelTest.html', webViewController);
+      // },
+      //
+      javascriptMode: JavascriptMode.unrestricted,
+      gestureNavigationEnabled: true,
+      javascriptChannels: <JavascriptChannel>{
+        _javascriptChannel(context),
+      },
+      // onProgress: (int progress) {
+      //   slog.i("TDI Groupware is loading (progress : $progress%)");
+      // },
+      onPageStarted: (String url) {
+        slog.i('page started $url');
+      },
+      onPageFinished: (String url) {
+        slog.i('page finished $url');
+      },
+      navigationDelegate: (NavigationRequest request) {
+        slog.i('allowing navigation to ${request.url}');
+        _checkLogin(request.url);
+        return NavigationDecision.navigate;
+      },
+    );
+  }
+
+  Widget _buildFloatingActionButtonOnyIOS() {
+    return Visibility(
+      visible: Platform.isIOS,
+      child: FloatingActionButton(
+        child: Icon(Icons.navigate_before),
+        onPressed: () => _goBack(context),
       ),
     );
   }

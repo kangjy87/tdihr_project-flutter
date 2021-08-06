@@ -29,14 +29,14 @@ class TitlePageState extends State<TitlePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    _tdiTitle(),
+                    _buildTDITitle(),
                     SizedBox(height: 100),
-                    _buttonSignin(),
+                    _buildSigninButton(),
                     SizedBox(height: 1),
                     if (_signining == true)
-                      _progressSinin()
+                      _buildSigniningProgress()
                     else if (TDIUser.isAleadyLogin == true)
-                      _buttonTDIGroupware(),
+                      _buildTDIGroupwareButton(),
                   ],
                 ),
               ),
@@ -70,7 +70,7 @@ class TitlePageState extends State<TitlePage> {
     }
   }
 
-  Widget _tdiTitle() {
+  Widget _buildTDITitle() {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
       child: Image.asset(
@@ -80,7 +80,7 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  Widget _buttonSignin() {
+  Widget _buildSigninButton() {
     return ElevatedButton(
       onPressed: () {
         if (TDIUser.isAleadyLogin == false) {
@@ -132,7 +132,7 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  Widget _progressSinin() {
+  Widget _buildSigniningProgress() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       width: 300,
@@ -157,7 +157,7 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  Widget _buttonTDIGroupware() {
+  Widget _buildTDIGroupwareButton() {
     return ElevatedButton(
       onPressed: () => Get.toNamed(PAGES.tdiGroupware),
       style: ButtonStyle(
