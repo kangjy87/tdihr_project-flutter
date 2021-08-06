@@ -8,6 +8,7 @@ import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -66,7 +67,8 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
               slog.i('page finished $url');
             },
             navigationDelegate: (NavigationRequest request) {
-              slog.i('allowing navigation to $request');
+              slog.i('allowing navigation to ${request.url}');
+              _checkLogin(request.url);
               return NavigationDecision.navigate;
             },
           ),
@@ -87,10 +89,23 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
         name: '_webToAppLogout',
         onMessageReceived: (JavascriptMessage message) {
           slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
-          authManager.googleSignOut().then((value) => {
-                TDIUser.clearLoginData(),
-                Get.toNamed(PAGES.title),
-              });
+          _goTitleAndLogout();
+        });
+  }
+
+  void _checkLogin(String urlString) {
+    var url = Uri.parse(urlString);
+    var error = url.queryParameters['error'];
+    if (error == 'unauthenticated') {
+      _goTitleAndLogout();
+      toastMessage(MESSAGES.errLoginFailed);
+    }
+  }
+
+  void _goTitleAndLogout() {
+    authManager.googleSignOut().then((value) => {
+          TDIUser.clearLoginData(),
+          Get.toNamed(PAGES.title),
         });
   }
 
