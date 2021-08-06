@@ -1,39 +1,18 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 
-class SigninPage extends StatefulWidget {
+class TitlePage extends StatefulWidget {
   @override
-  SigninPageState createState() => SigninPageState();
+  TitlePageState createState() => TitlePageState();
 }
 
-class SigninPageState extends State<SigninPage> {
-  @override
-  void initState() {
-    super.initState();
-
-    readText(TDIUser.fileAccountJson).then((json) => {
-          TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
-          setState(() {
-            TDIUser.readUserJSON = TDIUser.account != null;
-          })
-        });
-
-    readText(TDIUser.fileTokenJson).then((json) => {
-          TDIUser.token = TDIToken.formJson(jsonDecode(json)),
-          setState(() {
-            TDIUser.readUserTokenJSON = TDIUser.account != null;
-            if (TDIUser.readUserTokenJSON == true)
-              Get.toNamed(PAGES.tdiGroupware);
-          })
-        });
-  }
+class TitlePageState extends State<TitlePage> {
+  bool _signining = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +20,33 @@ class SigninPageState extends State<SigninPage> {
       // appBar: AppBar(
       //   title: Text('TDI - Sign in with Google'),
       // ),
-      body: Center(
+      body: SafeArea(
         child: Column(
           children: <Widget>[
-            _tdiTitle(),
-            SizedBox(height: 100),
-            _buttonSignin(),
-            SizedBox(height: 1),
-            if (TDIUser.token != null) _buttonTDIGroupware()
+            Container(
+              child: WillPopScope(
+                onWillPop: () => _goBack(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    _buildTDITitle(),
+                    SizedBox(height: 100),
+                    _buildSigninButton(),
+                    SizedBox(height: 1),
+                    if (_signining == true)
+                      _buildSigniningProgress()
+                    else if (TDIUser.isAleadyLogin == true)
+                      _buildTDIGroupwareButton(),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Text('ver. $appVersion'),
+              ),
+            ),
           ],
         ),
       ),
@@ -57,22 +55,22 @@ class SigninPageState extends State<SigninPage> {
 
   void _login(RESULT_TYPE result) {
     switch (result) {
-      case RESULT_TYPE.SUCCESS:
+      case RESULT_TYPE.LOGIN_SUCCESS:
         Get.toNamed(PAGES.tdiGroupware);
         break;
-      case RESULT_TYPE.FAILED:
+      case RESULT_TYPE.LOGIN_EMAIL_ERROR:
         TDIUser.clearLoginData();
-        toastMessage(MESSAGES.errLogin);
+        toastMessage(MESSAGES.errLoginEmail);
         break;
-      case RESULT_TYPE.EXCEPTION:
+      case RESULT_TYPE.LOGIN_FAILED:
         TDIUser.clearLoginData();
-        toastMessage(MESSAGES.errLogin);
+        toastMessage(MESSAGES.errLoginFailed);
         break;
       default:
     }
   }
 
-  Widget _tdiTitle() {
+  Widget _buildTDITitle() {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
       child: Image.asset(
@@ -82,16 +80,20 @@ class SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget _buttonSignin() {
+  Widget _buildSigninButton() {
     return ElevatedButton(
       onPressed: () {
-        if (TDIUser.token == null) {
+        if (TDIUser.isAleadyLogin == false) {
+          _signining = true;
+          setState(() {});
           authManager.googleSingIn().then((value) => {
-                setState(() {}),
                 _login(value),
+                _signining = false,
+                if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {}),
               });
         } else {
           authManager.googleSignOut().then((value) => {
+                _signining = false,
                 setState(() {}),
                 TDIUser.clearLoginData(),
               });
@@ -121,7 +123,7 @@ class SigninPageState extends State<SigninPage> {
             Text(
                 TDIUser.account == null
                     ? STRINGS.googleLogin
-                    : TDIUser.account!.email + " " + STRINGS.logout,
+                    : TDIUser.account!.name + " " + STRINGS.logout,
                 style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
                 textAlign: TextAlign.center),
           ],
@@ -130,7 +132,32 @@ class SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget _buttonTDIGroupware() {
+  Widget _buildSigniningProgress() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      width: 300,
+      // height: 30,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            STRINGS.signining,
+            style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+            textAlign: TextAlign.center,
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+              minHeight: 10,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTDIGroupwareButton() {
     return ElevatedButton(
       onPressed: () => Get.toNamed(PAGES.tdiGroupware),
       style: ButtonStyle(
@@ -155,12 +182,18 @@ class SigninPageState extends State<SigninPage> {
             //   height: 20,
             // ),
             // SizedBox(width: 30),
-            Text(STRINGS.tdiGroupware,
-                style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
-                textAlign: TextAlign.center),
+            Text(
+              STRINGS.tdiGroupware,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<bool> _goBack(BuildContext context) async {
+    return Future.value(false);
   }
 }

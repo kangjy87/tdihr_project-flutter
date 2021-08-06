@@ -1,12 +1,14 @@
+import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
-import 'package:lottie/lottie.dart';
 
 void main() async {
   if (kReleaseMode == true)
@@ -22,76 +24,48 @@ void main() async {
 
 class MainApp extends StatefulWidget {
   const MainApp({Key? key}) : super(key: key);
-
   @override
-  _MainAppState createState() => _MainAppState();
+  MainAppState createState() => MainAppState();
 }
 
-class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
-  late final AnimationController _animationController;
-  bool _showAnimation = true;
+class MainAppState extends State<MainApp> with TickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return _splashScreen();
+  }
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
+
+    readText(TDIUser.fileAccountJson).then((json) => {
+          TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
           setState(() {
-            _showAnimation = false;
-          });
-        }
-      });
+            TDIUser.readUserJSON = TDIUser.account != null;
+          })
+        });
+
+    readText(TDIUser.fileTokenJson).then((json) => {
+          TDIUser.token = TDIToken.formJson(jsonDecode(json)),
+          setState(() {
+            TDIUser.readUserTokenJSON = TDIUser.account != null;
+          })
+        });
+
+    readPackageInfo();
   }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  MaterialApp _splashScreen() {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Colors.white,
-          child: Lottie.asset(
-            ASSETS.lottieSplash,
-            fit: BoxFit.contain,
-            controller: _animationController,
-            onLoaded: (composition) {
-              _animationController
-                ..duration = composition.duration
-                ..reset()
-                ..forward();
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  GetMaterialApp _mainTitle() {
+  GetMaterialApp _splashScreen() {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        fontFamily: 'TmoneyRoundWind',
       ),
       getPages: Pages.container,
-      initialRoute: PAGES.title,
-      defaultTransition: Transition.noTransition,
-      // home: TDIGroupwarePage(),
+      initialRoute: PAGES.splash,
+      defaultTransition: Transition.fadeIn,
+      transitionDuration: Duration(seconds: 1),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_showAnimation == true)
-      return _splashScreen();
-    else
-      return _mainTitle();
   }
 }

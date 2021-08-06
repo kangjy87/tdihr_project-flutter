@@ -61,4 +61,6 @@ class TDIUser {
     readUserJSON = false;
     readUserTokenJSON = false;
   }
+
+  static bool get isAleadyLogin => token != null;
 }

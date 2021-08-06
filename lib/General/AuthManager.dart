@@ -31,7 +31,9 @@ class AuthManager {
   Future<RESULT_TYPE> googleSingIn() async {
     try {
       final GoogleSignInAccount? gUser = await gSignIn.signIn();
-      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      if (gUser == null) return RESULT_TYPE.LOGIN_FAILED;
+
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
@@ -65,16 +67,16 @@ class AuthManager {
         slog.i('token:' + TDIUser.token!.token);
       } else {
         slog.e(response);
-        return RESULT_TYPE.FAILED;
+        return RESULT_TYPE.LOGIN_EMAIL_ERROR;
       }
 
-      return RESULT_TYPE.SUCCESS;
+      return RESULT_TYPE.LOGIN_SUCCESS;
     } on Exception catch (e) {
       slog.e(e.toString());
       List<String> result = e.toString().split(", ");
       authManager.setLastFBMessage(result[0]);
       googleSignOut();
-      return RESULT_TYPE.EXCEPTION;
+      return RESULT_TYPE.LOGIN_EMAIL_ERROR;
     }
   }
 
