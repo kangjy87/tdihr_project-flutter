@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
@@ -57,6 +58,8 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
         });
 
     readPackageInfo();
+
+    localAuthManager.initialze();
   }
 
   GetMaterialApp _splashScreen() {

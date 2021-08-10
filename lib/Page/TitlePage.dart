@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
@@ -37,6 +38,8 @@ class TitlePageState extends State<TitlePage> {
                       _buildSigniningProgress()
                     else if (TDIUser.isAleadyLogin == true)
                       _buildTDIGroupwareButton(),
+                    SizedBox(height: 1),
+                    _buildAuthenticateButton(),
                   ],
                 ),
               ),
@@ -195,5 +198,18 @@ class TitlePageState extends State<TitlePage> {
 
   Future<bool> _goBack(BuildContext context) async {
     return Future.value(false);
+  }
+
+  Widget _buildAuthenticateButton() {
+    return ElevatedButton(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('Authenticate'),
+          Icon(Icons.perm_device_information),
+        ],
+      ),
+      onPressed: localAuthManager.authenticate,
+    );
   }
 }
