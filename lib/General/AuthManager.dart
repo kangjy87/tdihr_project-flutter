@@ -50,10 +50,9 @@ class AuthManager {
       if (Platform.isAndroid == true)
         platformOS = OS_TYPE.AOS.convertString;
       else if (Platform.isIOS) platformOS = OS_TYPE.IOS.convertString;
-      TDIUser.account = TDIAccount(PROVIDERS.google, fUser.uid, fUser.email!,
-          fUser.displayName!, platformOS);
-      var response =
-          await Dio().post(URL.tdiAuth, data: TDIUser.account!.toData());
+      TDIUser.account =
+          TDIAccount(PROVIDERS.google, fUser.uid, fUser.email!, fUser.displayName!, platformOS);
+      var response = await Dio().post(URL.tdiAuth, data: TDIUser.account!.toData());
 
       if (response.statusCode == 200) {
         TDIUser.token = TDIToken.formJson(response.data);
