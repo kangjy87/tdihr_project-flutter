@@ -76,10 +76,7 @@ class TitlePageState extends State<TitlePage> {
   Widget _buildTDITitle() {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
-      child: Image.asset(
-        ASSETS.tdiLogo,
-        width: 200,
-      ),
+      child: Image.asset(ASSETS.tdiLogo, width: 200),
     );
   }
 
@@ -92,7 +89,7 @@ class TitlePageState extends State<TitlePage> {
           authManager.googleSingIn().then((value) => {
                 _login(value),
                 _signining = false,
-                if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {}),
+                if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {})
               });
         } else {
           authManager.googleSignOut().then((value) => {
@@ -103,14 +100,13 @@ class TitlePageState extends State<TitlePage> {
         }
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-          ),
-        ),
-      ),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
       child: Container(
         width: 300,
         height: 30,
@@ -164,14 +160,13 @@ class TitlePageState extends State<TitlePage> {
     return ElevatedButton(
       onPressed: () => Get.toNamed(PAGES.tdiGroupware),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-          ),
-        ),
-      ),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
       child: Container(
         width: 300,
         height: 30,

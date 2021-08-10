@@ -16,22 +16,11 @@ class TDIAccount {
         name = json['name'],
         os = json['os'];
 
-  Map<String, dynamic> toJson() => {
-        'provider': provider,
-        'token': token,
-        'email': email,
-        'name': name,
-        'os': os
-      };
+  Map<String, dynamic> toJson() =>
+      {'provider': provider, 'token': token, 'email': email, 'name': name, 'os': os};
 
   toData() {
-    return {
-      'provider': provider,
-      'token': token,
-      'email': email,
-      'name': name,
-      'os': os
-    };
+    return {'provider': provider, 'token': token, 'email': email, 'name': name, 'os': os};
   }
 }
 

@@ -19,8 +19,7 @@ class TDIGroupwarePage extends StatefulWidget {
 
 class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   late WebViewController _controller;
-  final Completer<WebViewController> _controllerComplete =
-      Completer<WebViewController>();
+  final Completer<WebViewController> _controllerComplete = Completer<WebViewController>();
 
   @override
   void initState() {
@@ -94,18 +93,19 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
 
   Future<void> loadHtmlFromAssets(String filename, controller) async {
     String fileText = await rootBundle.loadString(filename);
-    controller.loadUrl(Uri.dataFromString(fileText,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
+    controller.loadUrl(
+        Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+            .toString());
   }
 
   JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
-        name: '_webToAppLogout',
-        onMessageReceived: (JavascriptMessage message) {
-          slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
-          _goTitleAndLogout();
-        });
+      name: '_webToAppLogout',
+      onMessageReceived: (JavascriptMessage message) {
+        slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
+        _goTitleAndLogout();
+      },
+    );
   }
 
   void _checkLogin(String urlString) {
