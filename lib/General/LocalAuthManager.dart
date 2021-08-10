@@ -85,19 +85,13 @@ class LocalAuthManager {
       _authenticating = true;
       _authenticated = await auth
           .authenticate(
-        localizedReason: 'XXXXX 접속 인증 입니다.',
+        localizedReason: '계속하려면 바이오 인증을 완료하세요.',
         useErrorDialogs: true,
         stickyAuth: true,
         sensitiveTransaction: true,
-        // androidAuthStrings: AndroidAuthMessages(
-        //   signInTitle: 'XXXXX',
-        //   biometricHint: '지문 인식을 해주세요.',
-        // ),
-        iOSAuthStrings: IOSAuthMessages(
-          lockOut: '1111111111',
-          goToSettingsButton: '22222222222222',
-          goToSettingsDescription: '33333333333333',
-          cancelButton: '4444444444',
+        androidAuthStrings: AndroidAuthMessages(
+          signInTitle: 'XXXXX',
+          biometricHint: '인증 처리 입니다.',
         ),
         // biometricOnly: true,
       )

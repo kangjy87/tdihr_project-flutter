@@ -64,6 +64,6 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Biometric authentication for accessing secrets</string>
+	<string>계속하려면 바이오 인증을 완료하세요.</string>
 </dict>
 </plist>
