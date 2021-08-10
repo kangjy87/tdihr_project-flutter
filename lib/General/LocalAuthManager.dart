@@ -89,10 +89,10 @@ class LocalAuthManager {
         useErrorDialogs: true,
         stickyAuth: true,
         sensitiveTransaction: true,
-        androidAuthStrings: AndroidAuthMessages(
-          signInTitle: 'XXXXX',
-          biometricHint: '지문 인식을 해주세요.',
-        ),
+        // androidAuthStrings: AndroidAuthMessages(
+        //   signInTitle: 'XXXXX',
+        //   biometricHint: '지문 인식을 해주세요.',
+        // ),
         iOSAuthStrings: IOSAuthMessages(
           lockOut: '1111111111',
           goToSettingsButton: '22222222222222',
