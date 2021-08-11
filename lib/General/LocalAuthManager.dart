@@ -116,10 +116,12 @@ class LocalAuthManager {
       slog.i(e);
 
       _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZED;
+      slog.i('Auth Result : $_authResult');
       return _authResult;
     }
 
     _authResult = _authenticated ? LOCAL_AUTH_RESULT.AUTHORIZED : LOCAL_AUTH_RESULT.AUTHORIZED_FAIL;
+    slog.i('Auth Result : $_authResult');
     return _authResult;
   }
 
