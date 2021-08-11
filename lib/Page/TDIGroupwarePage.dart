@@ -84,18 +84,20 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   Widget _buildFloatingActionButtonOnyIOS() {
     return Visibility(
       visible: Platform.isIOS,
-      child: FloatingActionButton(
-        child: Icon(Icons.navigate_before),
-        onPressed: () => _goBack(context),
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: FloatingActionButton(
+          child: Icon(Icons.navigate_before),
+          onPressed: () => _goBack(context),
+        ),
       ),
     );
   }
 
   Future<void> loadHtmlFromAssets(String filename, controller) async {
     String fileText = await rootBundle.loadString(filename);
-    controller.loadUrl(
-        Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-            .toString());
+    controller
+        .loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
 
   JavascriptChannel _javascriptChannel(BuildContext context) {
