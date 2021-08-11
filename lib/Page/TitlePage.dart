@@ -45,27 +45,32 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  void _login(RESULT_TYPE result) {
+  void _login(GOOGLE_AUTH_RESULT result) {
     switch (result) {
-      case RESULT_TYPE.LOGIN_SUCCESS:
-        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZED) {
-          Get.toNamed(PAGES.tdiGroupware);
-        } else {
-          if (localAuthManager.authenticated == true) {
-            Get.toNamed(PAGES.tdiGroupware);
+      case GOOGLE_AUTH_RESULT.SUCCESS:
+        localAuthManager.authenticate().then((value) {
+          switch (value) {
+            case LOCAL_AUTH_RESULT.SUCCESS:
+            case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+              Get.toNamed(PAGES.tdiGroupware);
+              break;
+            case LOCAL_AUTH_RESULT.FAILED:
+              Get.toNamed(PAGES.title);
+              setState(() {});
+              break;
           }
-        }
-        setState(() {});
+        });
         break;
-      case RESULT_TYPE.LOGIN_EMAIL_ERROR:
+      case GOOGLE_AUTH_RESULT.ERROR_EMAIL:
         TDIUser.clearLoginData();
         toastMessage(MESSAGES.errLoginEmail);
         break;
-      case RESULT_TYPE.LOGIN_FAILED:
+      case GOOGLE_AUTH_RESULT.FAILED:
         TDIUser.clearLoginData();
         toastMessage(MESSAGES.errLoginFailed);
         break;
       default:
+        break;
     }
   }
 
@@ -83,7 +88,7 @@ class TitlePageState extends State<TitlePage> {
       if (localAuthManager.authenticated == true)
         widgets.add(_buildTDIGroupwareButton());
       else {
-        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZED)
+        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE)
           widgets.add(_buildTDIGroupwareButton());
         else
           widgets.add(_buildAuthenticateButton());
@@ -107,7 +112,7 @@ class TitlePageState extends State<TitlePage> {
           _signining = true;
           setState(() {});
           authManager.googleSingIn().then(
-              (value) => {_login(value), _signining = false, if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {})});
+              (value) => {_login(value), _signining = false, if (value != GOOGLE_AUTH_RESULT.SUCCESS) setState(() {})});
         } else {
           authManager.googleSignOut().then((value) => {
                 _signining = false,
@@ -202,7 +207,7 @@ class TitlePageState extends State<TitlePage> {
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
       onPressed: () => localAuthManager.authenticate().then((value) {
-        if (value == LOCAL_AUTH_RESULT.AUTHORIZED) Get.toNamed(PAGES.tdiGroupware);
+        if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(PAGES.tdiGroupware);
       }),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),

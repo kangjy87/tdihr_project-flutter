@@ -13,7 +13,6 @@ class SplashPage extends StatefulWidget {
 
 class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
-  bool _showAnimation = true;
 
   // @override
   // void initState() {
@@ -22,45 +21,52 @@ class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   //     ..addStatusListener((status) {
   //       if (status == AnimationStatus.completed) {
   //         setState(() {
-  //           _showAnimation = false;
   //           if (TDIUser.isAleadyLogin == true) {
-  //             Get.toNamed(PAGES.tdiGroupware);
+  //             localAuthManager.authenticate().then((value) {
+  //               switch (value) {
+  //                 case LOCAL_AUTH_RESULT.SUCCESS:
+  //                 case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+  //                   Get.toNamed(PAGES.tdiGroupware);
+  //                   break;
+  //                 case LOCAL_AUTH_RESULT.FAILED:
+  //                   Get.toNamed(PAGES.title);
+  //                   break;
+  //               }
+  //             });
   //           } else {
   //             Get.toNamed(PAGES.title);
   //           }
-  //           localAuthManager.authenticate();
   //         });
   //       }
   //     });
   // }
+
+  void _goNextStep() {
+    if (TDIUser.isAleadyLogin == true) {
+      localAuthManager.authenticate().then((value) {
+        switch (value) {
+          case LOCAL_AUTH_RESULT.SUCCESS:
+          case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+            Get.toNamed(PAGES.tdiGroupware);
+            break;
+          case LOCAL_AUTH_RESULT.FAILED:
+            Get.toNamed(PAGES.title);
+            break;
+        }
+      });
+    } else {
+      Get.toNamed(PAGES.title);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(vsync: this)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          _showAnimation = false;
-          localAuthManager.authenticate().then((value) {
-            switch (value) {
-              case LOCAL_AUTH_RESULT.AUTHORIZED:
-                if (TDIUser.isAleadyLogin == true) {
-                  Get.toNamed(PAGES.tdiGroupware);
-                } else {
-                  Get.toNamed(PAGES.title);
-                }
-                break;
-              case LOCAL_AUTH_RESULT.AUTHORIZED_FAIL:
-                Get.toNamed(PAGES.title);
-                break;
-              case LOCAL_AUTH_RESULT.NO_AUTHORIZED:
-                if (TDIUser.isAleadyLogin == true) {
-                  Get.toNamed(PAGES.tdiGroupware);
-                } else {
-                  Get.toNamed(PAGES.title);
-                }
-                break;
-            }
-          });
+          _goNextStep();
+          setState(() {});
         }
       });
   }

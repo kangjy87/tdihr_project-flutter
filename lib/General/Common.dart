@@ -21,12 +21,6 @@ extension OSTypeExt on OS_TYPE {
   }
 }
 
-enum RESULT_TYPE {
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
-  LOGIN_EMAIL_ERROR,
-}
-
 class PROVIDERS {
   static String google = 'goole';
 }

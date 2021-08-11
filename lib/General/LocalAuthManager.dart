@@ -12,9 +12,9 @@ enum BIO_SURPPORT {
 }
 
 enum LOCAL_AUTH_RESULT {
-  AUTHORIZED,
-  AUTHORIZED_FAIL,
-  NO_AUTHORIZED,
+  NO_AUTHORIZE,
+  SUCCESS,
+  FAILED,
 }
 
 LocalAuthManager localAuthManager = LocalAuthManager();
@@ -23,25 +23,25 @@ class LocalAuthManager {
   final LocalAuthentication auth = LocalAuthentication();
   BIO_SURPPORT _supportState = BIO_SURPPORT.UNKNOWN;
   bool _canCheckBiometrics = false;
-  late List<BiometricType> _availableBiometics = <BiometricType>[];
+  List<BiometricType>? _availableBiometics = <BiometricType>[];
   bool _authenticated = false;
   bool _authenticating = false;
-  LOCAL_AUTH_RESULT _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZED;
-  String _lastError = '';
+  LOCAL_AUTH_RESULT _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZE;
+  String? _lastError = '';
 
   BIO_SURPPORT get supportState => _supportState;
   LOCAL_AUTH_RESULT get authResult => _authResult;
   bool get authenticated => _authenticated;
   bool get authenticating => _authenticating;
 
-  void setLastError(String err) {
-    _lastError = err;
-    slog.i(err);
+  set lastError(String? value) {
+    _lastError = value;
+    slog.i('Last Error : $_lastError');
   }
 
-  String getLastError() {
-    String err = _lastError;
-    _lastError = '';
+  String? get lastError {
+    String? err = _lastError;
+    _lastError = null;
     return err;
   }
 
@@ -58,8 +58,9 @@ class LocalAuthManager {
         return value;
       });
     } on PlatformException catch (e) {
+      slog.i(e);
       _supportState = BIO_SURPPORT.UNKNOWN;
-      setLastError("Error - ${e.message}");
+      lastError = 'Error - ${e.message}';
     }
 
     slog.i('Support State $_supportState');
@@ -69,8 +70,9 @@ class LocalAuthManager {
     try {
       _canCheckBiometrics = await auth.canCheckBiometrics;
     } on PlatformException catch (e) {
+      slog.i(e);
       _canCheckBiometrics = false;
-      setLastError("Error - ${e.message}");
+      lastError = 'Error - ${e.message}';
     }
 
     slog.i('Can Biometrics $_canCheckBiometrics');
@@ -80,11 +82,12 @@ class LocalAuthManager {
     try {
       _availableBiometics = await auth.getAvailableBiometrics();
     } on PlatformException catch (e) {
+      slog.i(e);
       _availableBiometics = <BiometricType>[];
-      setLastError("Error - ${e.message}");
+      lastError = 'Error - ${e.message}';
     }
 
-    _availableBiometics.forEach((element) {
+    _availableBiometics!.forEach((element) {
       slog.i('Available Biometic ${element.toString()}');
     });
   }
@@ -110,17 +113,16 @@ class LocalAuthManager {
         return value;
       });
     } on PlatformException catch (e) {
+      slog.i(e);
       _authenticated = false;
       _authenticating = false;
-      setLastError("Error - ${e.message}");
-      slog.i(e);
-
-      _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZED;
+      _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZE;
+      lastError = 'Error - ${e.message}';
       slog.i('Auth Result : $_authResult');
       return _authResult;
     }
 
-    _authResult = _authenticated ? LOCAL_AUTH_RESULT.AUTHORIZED : LOCAL_AUTH_RESULT.AUTHORIZED_FAIL;
+    _authResult = _authenticated ? LOCAL_AUTH_RESULT.SUCCESS : LOCAL_AUTH_RESULT.FAILED;
     slog.i('Auth Result : $_authResult');
     return _authResult;
   }
