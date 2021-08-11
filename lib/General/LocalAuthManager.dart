@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:local_auth_device_credentials/auth_strings.dart';
 import 'package:local_auth_device_credentials/local_auth.dart';
@@ -10,6 +11,12 @@ enum BIO_SURPPORT {
   UNSUPPORTED,
 }
 
+enum LOCAL_AUTH_RESULT {
+  AUTHORIZED,
+  AUTHORIZED_FAIL,
+  NO_AUTHORIZED,
+}
+
 LocalAuthManager localAuthManager = LocalAuthManager();
 
 class LocalAuthManager {
@@ -19,9 +26,11 @@ class LocalAuthManager {
   late List<BiometricType> _availableBiometics = <BiometricType>[];
   bool _authenticated = false;
   bool _authenticating = false;
+  LOCAL_AUTH_RESULT _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZED;
   String _lastError = '';
 
   BIO_SURPPORT get supportState => _supportState;
+  LOCAL_AUTH_RESULT get authResult => _authResult;
   bool get authenticated => _authenticated;
   bool get authenticating => _authenticating;
 
@@ -80,18 +89,18 @@ class LocalAuthManager {
     });
   }
 
-  Future<void> authenticate() async {
+  Future<LOCAL_AUTH_RESULT> authenticate() async {
     try {
       _authenticating = true;
       _authenticated = await auth
           .authenticate(
-        localizedReason: '계속하려면 바이오 인증을 완료하세요.',
+        localizedReason: STRINGS.authenticate,
         useErrorDialogs: true,
         stickyAuth: true,
         sensitiveTransaction: true,
         androidAuthStrings: AndroidAuthMessages(
-          signInTitle: 'XXXXX',
-          biometricHint: '인증 처리 입니다.',
+          signInTitle: STRINGS.tdiGroupware,
+          biometricHint: ' ',
         ),
         // biometricOnly: true,
       )
@@ -105,7 +114,13 @@ class LocalAuthManager {
       _authenticating = false;
       setLastError("Error - ${e.message}");
       slog.i(e);
+
+      _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZED;
+      return _authResult;
     }
+
+    _authResult = _authenticated ? LOCAL_AUTH_RESULT.AUTHORIZED : LOCAL_AUTH_RESULT.AUTHORIZED_FAIL;
+    return _authResult;
   }
 
   void cancelAuthentication() async {

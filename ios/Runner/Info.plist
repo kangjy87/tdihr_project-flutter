@@ -64,6 +64,6 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-	<string>계속하려면 바이오 인증을 완료하세요.</string>
+	<string>본인 인증을 완료해 주세요.</string>
 </dict>
 </plist>

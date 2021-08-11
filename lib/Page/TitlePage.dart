@@ -29,18 +29,7 @@ class TitlePageState extends State<TitlePage> {
                 onWillPop: () => _goBack(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    _buildTDITitle(),
-                    SizedBox(height: 100),
-                    _buildSigninButton(),
-                    SizedBox(height: 1),
-                    if (_signining == true)
-                      _buildSigniningProgress()
-                    else if (TDIUser.isAleadyLogin == true)
-                      _buildTDIGroupwareButton(),
-                    SizedBox(height: 1),
-                    _buildAuthenticateButton(),
-                  ],
+                  children: _buildMenu(),
                 ),
               ),
             ),
@@ -59,7 +48,15 @@ class TitlePageState extends State<TitlePage> {
   void _login(RESULT_TYPE result) {
     switch (result) {
       case RESULT_TYPE.LOGIN_SUCCESS:
-        Get.toNamed(PAGES.tdiGroupware);
+        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZED) {
+          Get.toNamed(PAGES.tdiGroupware);
+          setState(() {});
+        } else {
+          if (localAuthManager.authenticated == true) {
+            Get.toNamed(PAGES.tdiGroupware);
+            setState(() {});
+          }
+        }
         break;
       case RESULT_TYPE.LOGIN_EMAIL_ERROR:
         TDIUser.clearLoginData();
@@ -71,6 +68,30 @@ class TitlePageState extends State<TitlePage> {
         break;
       default:
     }
+  }
+
+  List<Widget> _buildMenu() {
+    List<Widget> widgets = [];
+
+    widgets.add(_buildTDITitle());
+    widgets.add(SizedBox(height: 100));
+    widgets.add(_buildSigninButton());
+    widgets.add(SizedBox(height: 1));
+
+    if (_signining == true)
+      widgets.add(_buildSigniningProgress());
+    else if (TDIUser.isAleadyLogin == true) {
+      if (localAuthManager.authenticated == true)
+        widgets.add(_buildTDIGroupwareButton());
+      else {
+        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZED)
+          widgets.add(_buildTDIGroupwareButton());
+        else
+          widgets.add(_buildAuthenticateButton());
+      }
+    }
+
+    return widgets;
   }
 
   Widget _buildTDITitle() {
@@ -86,11 +107,8 @@ class TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          authManager.googleSingIn().then((value) => {
-                _login(value),
-                _signining = false,
-                if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {})
-              });
+          authManager.googleSingIn().then(
+              (value) => {_login(value), _signining = false, if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {})});
         } else {
           authManager.googleSignOut().then((value) => {
                 _signining = false,
@@ -119,12 +137,8 @@ class TitlePageState extends State<TitlePage> {
               ASSETS.googleLogo,
               height: 30,
             ),
-            Text(
-                TDIUser.account == null
-                    ? STRINGS.googleLogin
-                    : TDIUser.account!.name + " " + STRINGS.logout,
-                style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
-                textAlign: TextAlign.center),
+            Text(TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
+                style: const TextStyle(color: Color(0xff454f63), fontSize: 15), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -175,11 +189,6 @@ class TitlePageState extends State<TitlePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Image.asset(
-            //   COMMON.ASSET_TDI_LOGO,
-            //   height: 20,
-            // ),
-            // SizedBox(width: 30),
             Text(
               STRINGS.tdiGroupware,
               style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
@@ -191,20 +200,39 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  Future<bool> _goBack(BuildContext context) async {
-    return Future.value(false);
-  }
-
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Authenticate'),
-          Icon(Icons.perm_device_information),
-        ],
+      onPressed: () => localAuthManager.authenticate().then((value) {
+        if (value == LOCAL_AUTH_RESULT.AUTHORIZED) Get.toNamed(PAGES.tdiGroupware);
+      }),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
+      child: Container(
+        width: 300,
+        height: 30,
+        margin: EdgeInsets.only(top: 3, bottom: 3),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              STRINGS.authenticate,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
-      onPressed: localAuthManager.authenticate,
     );
+  }
+
+  Future<bool> _goBack(BuildContext context) async {
+    return Future.value(false);
   }
 }

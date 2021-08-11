@@ -50,6 +50,7 @@ class MESSAGES {
 class STRINGS {
   static String tdiGroupware = 'TDI Groupware';
   static String googleLogin = '구글 로그인(회사메일)';
+  static String authenticate = "본인 인증을 완료해 주세요.";
   static String signining = '로그인중 입니다 ...';
   static String logout = '로그아웃';
 }
