@@ -30,16 +30,15 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   @override
   Widget build(BuildContext context) {
     slog.i("TDI Groupware Start ...");
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: WillPopScope(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: WillPopScope(
           onWillPop: () => _goBack(context),
           child: _buildWebView(),
         ),
-        floatingActionButton: _buildFloatingActionButtonOnyIOS(),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
+      floatingActionButton: _buildFloatingActionButtonOnyIOS(),
     );
   }
 
