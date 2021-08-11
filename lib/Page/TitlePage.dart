@@ -50,13 +50,12 @@ class TitlePageState extends State<TitlePage> {
       case RESULT_TYPE.LOGIN_SUCCESS:
         if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZED) {
           Get.toNamed(PAGES.tdiGroupware);
-          setState(() {});
         } else {
           if (localAuthManager.authenticated == true) {
             Get.toNamed(PAGES.tdiGroupware);
-            setState(() {});
           }
         }
+        setState(() {});
         break;
       case RESULT_TYPE.LOGIN_EMAIL_ERROR:
         TDIUser.clearLoginData();
