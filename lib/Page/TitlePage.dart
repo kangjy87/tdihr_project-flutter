@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
@@ -28,16 +29,7 @@ class TitlePageState extends State<TitlePage> {
                 onWillPop: () => _goBack(context),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    _buildTDITitle(),
-                    SizedBox(height: 100),
-                    _buildSigninButton(),
-                    SizedBox(height: 1),
-                    if (_signining == true)
-                      _buildSigniningProgress()
-                    else if (TDIUser.isAleadyLogin == true)
-                      _buildTDIGroupwareButton(),
-                  ],
+                  children: _buildMenu(),
                 ),
               ),
             ),
@@ -53,30 +45,63 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  void _login(RESULT_TYPE result) {
+  void _login(GOOGLE_AUTH_RESULT result) {
     switch (result) {
-      case RESULT_TYPE.LOGIN_SUCCESS:
-        Get.toNamed(PAGES.tdiGroupware);
+      case GOOGLE_AUTH_RESULT.SUCCESS:
+        localAuthManager.authenticate().then((value) {
+          switch (value) {
+            case LOCAL_AUTH_RESULT.SUCCESS:
+            case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+              Get.toNamed(PAGES.tdiGroupware);
+              break;
+            case LOCAL_AUTH_RESULT.FAILED:
+              Get.toNamed(PAGES.title);
+              setState(() {});
+              break;
+          }
+        });
         break;
-      case RESULT_TYPE.LOGIN_EMAIL_ERROR:
+      case GOOGLE_AUTH_RESULT.ERROR_EMAIL:
         TDIUser.clearLoginData();
         toastMessage(MESSAGES.errLoginEmail);
         break;
-      case RESULT_TYPE.LOGIN_FAILED:
+      case GOOGLE_AUTH_RESULT.FAILED:
         TDIUser.clearLoginData();
         toastMessage(MESSAGES.errLoginFailed);
         break;
       default:
+        break;
     }
+  }
+
+  List<Widget> _buildMenu() {
+    List<Widget> widgets = [];
+
+    widgets.add(_buildTDITitle());
+    widgets.add(SizedBox(height: 100));
+    widgets.add(_buildSigninButton());
+    widgets.add(SizedBox(height: 1));
+
+    if (_signining == true)
+      widgets.add(_buildSigniningProgress());
+    else if (TDIUser.isAleadyLogin == true) {
+      if (localAuthManager.authenticated == true)
+        widgets.add(_buildTDIGroupwareButton());
+      else {
+        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE)
+          widgets.add(_buildTDIGroupwareButton());
+        else
+          widgets.add(_buildAuthenticateButton());
+      }
+    }
+
+    return widgets;
   }
 
   Widget _buildTDITitle() {
     return Container(
       padding: const EdgeInsets.only(top: 200, bottom: 10, left: 50, right: 50),
-      child: Image.asset(
-        ASSETS.tdiLogo,
-        width: 200,
-      ),
+      child: Image.asset(ASSETS.tdiLogo, width: 200),
     );
   }
 
@@ -86,11 +111,8 @@ class TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          authManager.googleSingIn().then((value) => {
-                _login(value),
-                _signining = false,
-                if (value != RESULT_TYPE.LOGIN_SUCCESS) setState(() {}),
-              });
+          authManager.googleSingIn().then(
+              (value) => {_login(value), _signining = false, if (value != GOOGLE_AUTH_RESULT.SUCCESS) setState(() {})});
         } else {
           authManager.googleSignOut().then((value) => {
                 _signining = false,
@@ -100,14 +122,13 @@ class TitlePageState extends State<TitlePage> {
         }
       },
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-          ),
-        ),
-      ),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
       child: Container(
         width: 300,
         height: 30,
@@ -120,12 +141,8 @@ class TitlePageState extends State<TitlePage> {
               ASSETS.googleLogo,
               height: 30,
             ),
-            Text(
-                TDIUser.account == null
-                    ? STRINGS.googleLogin
-                    : TDIUser.account!.name + " " + STRINGS.logout,
-                style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
-                textAlign: TextAlign.center),
+            Text(TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
+                style: const TextStyle(color: Color(0xff454f63), fontSize: 15), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -161,14 +178,13 @@ class TitlePageState extends State<TitlePage> {
     return ElevatedButton(
       onPressed: () => Get.toNamed(PAGES.tdiGroupware),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-          ),
-        ),
-      ),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
       child: Container(
         width: 300,
         height: 30,
@@ -177,13 +193,40 @@ class TitlePageState extends State<TitlePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Image.asset(
-            //   COMMON.ASSET_TDI_LOGO,
-            //   height: 20,
-            // ),
-            // SizedBox(width: 30),
             Text(
               STRINGS.tdiGroupware,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAuthenticateButton() {
+    return ElevatedButton(
+      onPressed: () => localAuthManager.authenticate().then((value) {
+        if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(PAGES.tdiGroupware);
+      }),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
+      child: Container(
+        width: 300,
+        height: 30,
+        margin: EdgeInsets.only(top: 3, bottom: 3),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              STRINGS.authenticate,
               style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
               textAlign: TextAlign.center,
             ),

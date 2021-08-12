@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:lottie/lottie.dart';
@@ -12,7 +13,51 @@ class SplashPage extends StatefulWidget {
 
 class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
-  bool _showAnimation = true;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _animationController = AnimationController(vsync: this)
+  //     ..addStatusListener((status) {
+  //       if (status == AnimationStatus.completed) {
+  //         setState(() {
+  //           if (TDIUser.isAleadyLogin == true) {
+  //             localAuthManager.authenticate().then((value) {
+  //               switch (value) {
+  //                 case LOCAL_AUTH_RESULT.SUCCESS:
+  //                 case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+  //                   Get.toNamed(PAGES.tdiGroupware);
+  //                   break;
+  //                 case LOCAL_AUTH_RESULT.FAILED:
+  //                   Get.toNamed(PAGES.title);
+  //                   break;
+  //               }
+  //             });
+  //           } else {
+  //             Get.toNamed(PAGES.title);
+  //           }
+  //         });
+  //       }
+  //     });
+  // }
+
+  void _goNextStep() {
+    if (TDIUser.isAleadyLogin == true) {
+      localAuthManager.authenticate().then((value) {
+        switch (value) {
+          case LOCAL_AUTH_RESULT.SUCCESS:
+          case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+            Get.toNamed(PAGES.tdiGroupware);
+            break;
+          case LOCAL_AUTH_RESULT.FAILED:
+            Get.toNamed(PAGES.title);
+            break;
+        }
+      });
+    } else {
+      Get.toNamed(PAGES.title);
+    }
+  }
 
   @override
   void initState() {
@@ -20,13 +65,8 @@ class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _animationController = AnimationController(vsync: this)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          setState(() {
-            _showAnimation = false;
-            if (TDIUser.isAleadyLogin == true)
-              Get.toNamed(PAGES.tdiGroupware);
-            else
-              Get.toNamed(PAGES.title);
-          });
+          _goNextStep();
+          setState(() {});
         }
       });
   }

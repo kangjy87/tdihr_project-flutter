@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
@@ -20,8 +21,10 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  SystemChrome.setEnabledSystemUIOverlays(
-      [SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  SystemChrome.setEnabledSystemUIOverlays([
+    SystemUiOverlay.bottom,
+    SystemUiOverlay.top,
+  ]);
   await Firebase.initializeApp();
   runApp(const MainApp());
 }
@@ -42,21 +45,27 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    readText(TDIUser.fileAccountJson).then((json) => {
-          TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
-          setState(() {
-            TDIUser.readUserJSON = TDIUser.account != null;
-          })
-        });
+    readText(TDIUser.fileAccountJson).then(
+      (json) => {
+        TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
+        setState(() {
+          TDIUser.readUserJSON = TDIUser.account != null;
+        }),
+      },
+    );
 
-    readText(TDIUser.fileTokenJson).then((json) => {
-          TDIUser.token = TDIToken.formJson(jsonDecode(json)),
-          setState(() {
-            TDIUser.readUserTokenJSON = TDIUser.account != null;
-          })
-        });
+    readText(TDIUser.fileTokenJson).then(
+      (json) => {
+        TDIUser.token = TDIToken.formJson(jsonDecode(json)),
+        setState(() {
+          TDIUser.readUserTokenJSON = TDIUser.account != null;
+        })
+      },
+    );
 
     readPackageInfo();
+
+    localAuthManager.initialze();
   }
 
   GetMaterialApp _splashScreen() {

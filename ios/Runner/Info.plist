@@ -63,5 +63,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>본인 인증을 완료해 주세요.</string>
 </dict>
 </plist>
