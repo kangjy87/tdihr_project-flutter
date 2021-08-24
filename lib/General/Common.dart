@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:package_info/package_info.dart';
 
@@ -51,26 +52,51 @@ class STRINGS {
   static String logout = '로그아웃';
 }
 
-String appName = '';
-String packageName = '';
-String appVersion = '';
-String buildNumber = '';
+class Util {
+  static final Util _instance = Util._internal();
 
-void readPackageInfo() {
-  PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-    appName = packageInfo.appName;
-    packageName = packageInfo.packageName;
-    appVersion = packageInfo.version;
-    buildNumber = packageInfo.buildNumber;
-  });
-}
+  String _appName = '';
+  String _packageName = '';
+  String _appVersion = '';
+  String _buildNumber = '';
 
-void showSnackBar(String title, String message) {
-  Get.snackbar(
-    title,
-    message,
-    snackPosition: SnackPosition.TOP,
-    colorText: Colors.white,
-    backgroundColor: Colors.blue[800],
-  );
+  String get appName => _appName;
+  String get packageName => _packageName;
+  String get appVersion => _appVersion;
+  String get buildNumber => _buildNumber;
+
+  factory Util() {
+    return _instance;
+  }
+
+  Util._internal();
+
+  void readPackageInfo() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      _appName = packageInfo.appName;
+      _packageName = packageInfo.packageName;
+      _appVersion = packageInfo.version;
+      _buildNumber = packageInfo.buildNumber;
+    });
+  }
+
+  Future<bool?> showToastMessage(String message) {
+    return Fluttertoast.showToast(
+        msg: message,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.blueAccent,
+        fontSize: 16.0,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT);
+  }
+
+  void showSnackBar(String title, String message) {
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.TOP,
+      colorText: Colors.white,
+      backgroundColor: Colors.blue[800],
+    );
+  }
 }

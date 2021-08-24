@@ -2,9 +2,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 
 class FCMManager {
-  static final FCMManager _manager = FCMManager._internal();
+  static final FCMManager _instance = FCMManager._internal();
+
   late FirebaseMessaging _firebaseMessaging;
-  late NotificationSettings notificationSettings;
+  // late NotificationSettings _notificationSettings;
   late String? _token;
 
   Function(RemoteMessage event)? _onMessageCallback;
@@ -13,7 +14,7 @@ class FCMManager {
   String? get token => _token;
 
   factory FCMManager() {
-    return _manager;
+    return _instance;
   }
 
   FCMManager._internal() {
@@ -26,7 +27,8 @@ class FCMManager {
   }
 
   Future<void> _checkPermission() async {
-    notificationSettings = await _firebaseMessaging
+    // _notificationSettings = await _firebaseMessaging
+    await _firebaseMessaging
         .requestPermission(
       announcement: true,
       carPlay: true,

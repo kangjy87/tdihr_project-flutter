@@ -8,7 +8,6 @@ import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
-import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -116,7 +115,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
     var error = url.queryParameters['error'];
     if (error == 'unauthenticated') {
       _goTitleAndLogout();
-      toastMessage(MESSAGES.errLoginFailed);
+      Util().showToastMessage(MESSAGES.errLoginFailed);
     }
   }
 

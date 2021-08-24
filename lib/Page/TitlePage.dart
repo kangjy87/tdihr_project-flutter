@@ -4,7 +4,6 @@ import 'package:hr_project_flutter/General/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
-import 'package:hr_project_flutter/General/ToastMessage.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 
 class TitlePage extends StatefulWidget {
@@ -36,7 +35,7 @@ class TitlePageState extends State<TitlePage> {
             Expanded(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: Text('ver. $appVersion'),
+                child: Text('ver. ${Util().appVersion}'),
               ),
             ),
           ],
@@ -48,7 +47,7 @@ class TitlePageState extends State<TitlePage> {
   void _login(GOOGLE_AUTH_RESULT result) {
     switch (result) {
       case GOOGLE_AUTH_RESULT.SUCCESS:
-        localAuthManager.authenticate().then((value) {
+        LocalAuthManager().authenticate().then((value) {
           switch (value) {
             case LOCAL_AUTH_RESULT.SUCCESS:
             case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
@@ -63,11 +62,11 @@ class TitlePageState extends State<TitlePage> {
         break;
       case GOOGLE_AUTH_RESULT.ERROR_EMAIL:
         TDIUser.clearLoginData();
-        toastMessage(MESSAGES.errLoginEmail);
+        Util().showToastMessage(MESSAGES.errLoginEmail);
         break;
       case GOOGLE_AUTH_RESULT.FAILED:
         TDIUser.clearLoginData();
-        toastMessage(MESSAGES.errLoginFailed);
+        Util().showToastMessage(MESSAGES.errLoginFailed);
         break;
       default:
         break;
@@ -85,10 +84,10 @@ class TitlePageState extends State<TitlePage> {
     if (_signining == true)
       widgets.add(_buildSigniningProgress());
     else if (TDIUser.isAleadyLogin == true) {
-      if (localAuthManager.authenticated == true)
+      if (LocalAuthManager().authenticated == true)
         widgets.add(_buildTDIGroupwareButton());
       else {
-        if (localAuthManager.authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE)
+        if (LocalAuthManager().authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE)
           widgets.add(_buildTDIGroupwareButton());
         else
           widgets.add(_buildAuthenticateButton());
@@ -206,7 +205,7 @@ class TitlePageState extends State<TitlePage> {
 
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
-      onPressed: () => localAuthManager.authenticate().then((value) {
+      onPressed: () => LocalAuthManager().authenticate().then((value) {
         if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(PAGES.tdiGroupware);
       }),
       style: ButtonStyle(
