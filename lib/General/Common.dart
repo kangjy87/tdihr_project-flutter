@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:package_info/package_info.dart';
 
 enum OS_TYPE {
@@ -61,4 +63,14 @@ void readPackageInfo() {
     appVersion = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
   });
+}
+
+void showSnackBar(String title, String message) {
+  Get.snackbar(
+    title,
+    message,
+    snackPosition: SnackPosition.TOP,
+    colorText: Colors.white,
+    backgroundColor: Colors.blue[800],
+  );
 }

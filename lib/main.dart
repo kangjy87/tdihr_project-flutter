@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
+import 'package:hr_project_flutter/General/FCMManager.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/FirebaseCore.dart';
 import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
@@ -25,7 +27,8 @@ void main() async {
     SystemUiOverlay.bottom,
     SystemUiOverlay.top,
   ]);
-  await Firebase.initializeApp();
+  await firebaseCore.initialize();
+  await FCMManager().initialize();
   runApp(const MainApp());
 }
 
@@ -47,7 +50,7 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     readText(TDIUser.fileAccountJson).then(
       (json) => {
-        TDIUser.account = TDIAccount.formJson(jsonDecode(json)),
+        if (json.isEmpty == false) TDIUser.account = TDIAccount.formJson(jsonDecode(json)) else TDIUser.account = null,
         setState(() {
           TDIUser.readUserJSON = TDIUser.account != null;
         }),
@@ -56,7 +59,7 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     readText(TDIUser.fileTokenJson).then(
       (json) => {
-        TDIUser.token = TDIToken.formJson(jsonDecode(json)),
+        if (json.isEmpty == false) TDIUser.token = TDIToken.formJson(jsonDecode(json)) else TDIUser.token = null,
         setState(() {
           TDIUser.readUserTokenJSON = TDIUser.account != null;
         })
@@ -65,6 +68,7 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     readPackageInfo();
 
+    FCMManager().setListener(_onMessage, _onMessageOpenedApp);
     localAuthManager.initialze();
   }
 
@@ -80,5 +84,13 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
       defaultTransition: Transition.fadeIn,
       transitionDuration: Duration(seconds: 1),
     );
+  }
+
+  void _onMessage(RemoteMessage message) {
+    showSnackBar(message.notification!.title!, message.notification!.body!);
+  }
+
+  void _onMessageOpenedApp(RemoteMessage message) {
+    showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 }
