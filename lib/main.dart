@@ -87,10 +87,10 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
   }
 
   void _onMessage(RemoteMessage message) {
-    Get.snackbar(message.notification!.title!, message.notification!.body!);
+    showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
-    Get.snackbar(message.notification!.title!, message.notification!.body!);
+    showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 }

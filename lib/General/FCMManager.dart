@@ -20,11 +20,9 @@ class FCMManager {
     _firebaseMessaging = FirebaseMessaging.instance;
   }
 
-  // Future<void> initialize(void onMessage(RemoteMessage event)?, void onMessageOpenedApp(RemoteMessage event)?) async {
   Future<void> initialize() async {
     await _checkPermission();
     await _getToken();
-    // await _setListener(onMessage, onMessageOpenedApp);
   }
 
   Future<void> _checkPermission() async {
