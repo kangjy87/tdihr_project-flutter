@@ -11,7 +11,6 @@ import 'package:hr_project_flutter/General/FirebaseCore.dart';
 import 'package:hr_project_flutter/General/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
-import 'package:hr_project_flutter/Page/WifiScanPage.dart';
 import 'package:logger/logger.dart';
 
 void main() async {
@@ -30,8 +29,7 @@ void main() async {
   ]);
   await FirebaseCore().initialize();
   await FCMManager().initialize();
-  // runApp(const MainApp());
-  runApp(FlutterWifiIoT());
+  runApp(const MainApp());
 }
 
 class MainApp extends StatefulWidget {
