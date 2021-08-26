@@ -413,13 +413,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.10"
-  wifi_iot:
+  wifi_flutter:
     dependency: "direct main"
     description:
-      name: wifi_iot
+      name: wifi_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.4"
+    version: "0.1.0+1"
   win32:
     dependency: transitive
     description:
