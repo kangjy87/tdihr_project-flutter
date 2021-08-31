@@ -38,6 +38,7 @@ class BeaconManager {
       _authorizationStatus == AuthorizationStatus.allowed ||
       _authorizationStatus == AuthorizationStatus.always ||
       _authorizationStatus == AuthorizationStatus.whenInUse;
+  bool get canScanning => isBluetooth == true && isAuthorization == true && isLocationService == true;
   bool get isLocationService => _isLocationService;
   bool get isBeaconEmpty => _beacons.isEmpty;
   List<Beacon> get beacons => _beacons;
@@ -120,7 +121,7 @@ class BeaconManager {
 
       _regionBeacons[result.region] = result.beacons;
       _beacons.clear();
-      if (isBluetooth == true || isAuthorization == true || isLocationService == true) {
+      if (canScanning == true) {
         _regionBeacons.values.forEach((list) {
           _beacons.addAll(list);
         });
