@@ -102,10 +102,9 @@ class BeaconManager {
   Future<void> startScanBeacon() async {
     _initScanning = await flutterBeacon.initializeScanning;
 
-    if (isBluetooth == false || isAuthorization == false || _isLocationService == false) {
-      checkAllRequirements();
-      return;
-    }
+    // if (isBluetooth == false || isAuthorization == false || isLocationService == false) {
+    //   return;
+    // }
 
     if (_streamRanging != null) {
       if (_streamRanging!.isPaused) {
@@ -114,17 +113,19 @@ class BeaconManager {
       }
     }
 
-    _streamRanging = flutterBeacon.ranging(_regions).listen((RangingResult result) {
+    _streamRanging = flutterBeacon.ranging(_regions).listen((RangingResult result) async {
       slog.i('Beacon ranging : $result');
 
-      checkAllRequirements();
+      await checkAllRequirements();
 
       _regionBeacons[result.region] = result.beacons;
       _beacons.clear();
-      _regionBeacons.values.forEach((list) {
-        _beacons.addAll(list);
-      });
-      _beacons.sort(_compareParameters);
+      if (isBluetooth == true || isAuthorization == true || isLocationService == true) {
+        _regionBeacons.values.forEach((list) {
+          _beacons.addAll(list);
+        });
+        _beacons.sort(_compareParameters);
+      }
       onScanBeacon!();
     });
   }
