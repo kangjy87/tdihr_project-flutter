@@ -27,7 +27,7 @@ void main() async {
     SystemUiOverlay.bottom,
     SystemUiOverlay.top,
   ]);
-  await firebaseCore.initialize();
+  await FirebaseCore().initialize();
   await FCMManager().initialize();
   runApp(const MainApp());
 }
@@ -66,10 +66,10 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
       },
     );
 
-    readPackageInfo();
+    Util().readPackageInfo();
 
     FCMManager().setListener(_onMessage, _onMessageOpenedApp);
-    localAuthManager.initialze();
+    LocalAuthManager().initialze();
   }
 
   GetMaterialApp _splashScreen() {
@@ -87,10 +87,10 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
   }
 
   void _onMessage(RemoteMessage message) {
-    showSnackBar(message.notification!.title!, message.notification!.body!);
+    Util().showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
-    showSnackBar(message.notification!.title!, message.notification!.body!);
+    Util().showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 }
