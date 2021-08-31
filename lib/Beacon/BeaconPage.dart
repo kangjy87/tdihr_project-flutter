@@ -39,7 +39,7 @@ class BeaconPage extends GetView<BeaconCtrl> {
         onPressed: () {},
       );
 
-    if (controller.isAuthorization == false)
+    if (controller.isAuthorization.value == false)
       return IconButton(
         tooltip: 'Not Authorized',
         icon: Icon(Icons.portable_wifi_off),

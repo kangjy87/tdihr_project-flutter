@@ -32,7 +32,12 @@ class BeaconManager {
   VoidCallback? onScanBeacon;
 
   BluetoothState get bluetoothState => _bluetoothState;
+  bool get isBluetooth => _bluetoothState == BluetoothState.stateOn;
   AuthorizationStatus get authorizationStatus => _authorizationStatus;
+  bool get isAuthorization =>
+      _authorizationStatus == AuthorizationStatus.allowed ||
+      _authorizationStatus == AuthorizationStatus.always ||
+      _authorizationStatus == AuthorizationStatus.whenInUse;
   bool get isLocationService => _isLocationService;
   bool get isBeaconEmpty => _beacons.isEmpty;
   List<Beacon> get beacons => _beacons;
@@ -94,13 +99,12 @@ class BeaconManager {
     }
   }
 
-  void close() {
-    _streamBluetooth?.cancel();
-    _streamRanging?.cancel();
-  }
-
   Future<void> startScanBeacon() async {
     _initScanning = await flutterBeacon.initializeScanning;
+
+    if (isBluetooth == false || isAuthorization == false || _isLocationService == false) {
+      return;
+    }
 
     if (_streamRanging != null) {
       if (_streamRanging!.isPaused) {
@@ -130,6 +134,11 @@ class BeaconManager {
       _beacons.clear();
       onScanBeacon!();
     }
+  }
+
+  void close() {
+    _streamBluetooth?.cancel();
+    _streamRanging?.cancel();
   }
 
   int _compareParameters(Beacon a, Beacon b) {

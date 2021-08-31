@@ -6,13 +6,9 @@ import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
 class BeaconCtrl extends GetxController with WidgetsBindingObserver {
   var bluetoothState = BluetoothState.stateOff.obs;
   var authorizationStatus = AuthorizationStatus.notDetermined.obs;
+  var isAuthorization = false.obs;
   var isLocationService = false.obs;
   var scanCount = 0.obs;
-
-  bool get isAuthorization =>
-      authorizationStatus.value == AuthorizationStatus.allowed ||
-      authorizationStatus.value == AuthorizationStatus.always ||
-      authorizationStatus.value == AuthorizationStatus.whenInUse;
 
   @override
   void onInit() {
@@ -24,6 +20,7 @@ class BeaconCtrl extends GetxController with WidgetsBindingObserver {
           () {
             bluetoothState.value = BeaconManager().bluetoothState;
             authorizationStatus.value = BeaconManager().authorizationStatus;
+            isAuthorization.value = BeaconManager().isAuthorization;
             isLocationService.value = BeaconManager().isLocationService;
           },
         )
