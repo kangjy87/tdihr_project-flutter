@@ -103,6 +103,7 @@ class BeaconManager {
     _initScanning = await flutterBeacon.initializeScanning;
 
     if (isBluetooth == false || isAuthorization == false || _isLocationService == false) {
+      checkAllRequirements();
       return;
     }
 
