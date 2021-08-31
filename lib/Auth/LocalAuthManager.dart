@@ -19,6 +19,12 @@ enum LOCAL_AUTH_RESULT {
 class LocalAuthManager {
   static final LocalAuthManager _instance = LocalAuthManager._internal();
 
+  factory LocalAuthManager() {
+    return _instance;
+  }
+
+  LocalAuthManager._internal();
+
   final LocalAuthentication _auth = LocalAuthentication();
   BIO_SURPPORT _supportState = BIO_SURPPORT.UNKNOWN;
   bool _canCheckBiometrics = false;
@@ -32,12 +38,6 @@ class LocalAuthManager {
   LOCAL_AUTH_RESULT get authResult => _authResult;
   bool get authenticated => _authenticated;
   bool get authenticating => _authenticating;
-
-  factory LocalAuthManager() {
-    return _instance;
-  }
-
-  LocalAuthManager._internal();
 
   set lastError(String? value) {
     _lastError = value;

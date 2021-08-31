@@ -4,6 +4,14 @@ import 'package:hr_project_flutter/General/Logger.dart';
 class FCMManager {
   static final FCMManager _instance = FCMManager._internal();
 
+  factory FCMManager() {
+    return _instance;
+  }
+
+  FCMManager._internal() {
+    _firebaseMessaging = FirebaseMessaging.instance;
+  }
+
   late FirebaseMessaging _firebaseMessaging;
   // late NotificationSettings _notificationSettings;
   late String? _token;
@@ -12,14 +20,6 @@ class FCMManager {
   Function(RemoteMessage event)? _onMessageOpenedAppCallback;
 
   String? get token => _token;
-
-  factory FCMManager() {
-    return _instance;
-  }
-
-  FCMManager._internal() {
-    _firebaseMessaging = FirebaseMessaging.instance;
-  }
 
   Future<void> initialize() async {
     await _checkPermission();
