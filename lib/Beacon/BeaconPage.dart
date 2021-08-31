@@ -155,7 +155,7 @@ class BeaconPage extends GetView<BeaconCtrl> {
           return AlertDialog(
             title: Text('위치 서비스 활성화'),
             content: Text(
-              '위치 서비스를 활성화해주세요. Settings > Privacy > Location Services.',
+              '위치 서비스를 활성화해주세요.',
             ),
             actions: [
               TextButton(
@@ -182,7 +182,7 @@ class BeaconPage extends GetView<BeaconCtrl> {
         builder: (context) {
           return AlertDialog(
             title: Text('블루투스 활성화'),
-            content: Text('블루투스를 활성화해주세요 Settings > Bluetooth.'),
+            content: Text('블루투스를 활성화해주세요.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
