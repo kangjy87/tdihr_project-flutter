@@ -8,7 +8,7 @@ import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FCMManager.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/FirebaseCore.dart';
-import 'package:hr_project_flutter/General/LocalAuthManager.dart';
+import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';

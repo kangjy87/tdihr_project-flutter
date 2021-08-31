@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/General/AuthManager.dart';
+import 'package:hr_project_flutter/Auth/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';

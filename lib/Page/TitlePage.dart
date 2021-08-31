@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/General/AuthManager.dart';
+import 'package:hr_project_flutter/Auth/AuthManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
-import 'package:hr_project_flutter/General/LocalAuthManager.dart';
+import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 
@@ -84,15 +84,21 @@ class TitlePageState extends State<TitlePage> {
     if (_signining == true)
       widgets.add(_buildSigniningProgress());
     else if (TDIUser.isAleadyLogin == true) {
-      if (LocalAuthManager().authenticated == true)
+      if (LocalAuthManager().authenticated == true) {
         widgets.add(_buildTDIGroupwareButton());
-      else {
-        if (LocalAuthManager().authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE)
+        widgets.add(SizedBox(height: 1));
+      } else {
+        if (LocalAuthManager().authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE) {
           widgets.add(_buildTDIGroupwareButton());
-        else
+          widgets.add(SizedBox(height: 1));
+        } else {
           widgets.add(_buildAuthenticateButton());
+          widgets.add(SizedBox(height: 1));
+        }
       }
     }
+
+    widgets.add(_buildBeaconButton());
 
     return widgets;
   }
@@ -226,6 +232,36 @@ class TitlePageState extends State<TitlePage> {
           children: <Widget>[
             Text(
               STRINGS.authenticate,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBeaconButton() {
+    return ElevatedButton(
+      onPressed: () => Get.toNamed(PAGES.beacon),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+            ),
+          )),
+      child: Container(
+        width: 300,
+        height: 30,
+        margin: EdgeInsets.only(top: 3, bottom: 3),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              STRINGS.beacon,
               style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
               textAlign: TextAlign.center,
             ),
