@@ -116,10 +116,10 @@ class TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          authManager.googleSingIn().then(
+          AuthManager().googleSingIn().then(
               (value) => {_login(value), _signining = false, if (value != GOOGLE_AUTH_RESULT.SUCCESS) setState(() {})});
         } else {
-          authManager.googleSignOut().then((value) => {
+          AuthManager().googleSignOut().then((value) => {
                 _signining = false,
                 setState(() {}),
                 TDIUser.clearLoginData(),

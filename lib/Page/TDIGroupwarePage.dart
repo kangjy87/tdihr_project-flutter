@@ -120,7 +120,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   }
 
   void _goTitleAndLogout() {
-    authManager.googleSignOut().then((value) => {
+    AuthManager().googleSignOut().then((value) => {
           TDIUser.clearLoginData(),
           Get.toNamed(PAGES.title),
         });
