@@ -35,6 +35,7 @@ class BeaconCtrl extends GetxController with WidgetsBindingObserver {
         .initialize();
 
     super.onInit();
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
@@ -46,6 +47,7 @@ class BeaconCtrl extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     BeaconManager().close();
+    WidgetsBinding.instance!.removeObserver(this);
     super.onClose();
   }
 }
