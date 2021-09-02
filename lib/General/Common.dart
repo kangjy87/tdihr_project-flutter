@@ -25,7 +25,7 @@ extension OSTypeExt on OS_TYPE {
 }
 
 class PROVIDERS {
-  static String google = 'goole';
+  static String google = 'google';
 }
 
 class ASSETS {

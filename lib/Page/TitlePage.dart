@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/Auth/AuthManager.dart';
+import 'package:hr_project_flutter/Firebase/FCMManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
@@ -116,7 +117,7 @@ class TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          AuthManager().googleSingIn().then(
+          AuthManager().googleSingIn(FCMManager().token).then(
               (value) => {_login(value), _signining = false, if (value != GOOGLE_AUTH_RESULT.SUCCESS) setState(() {})});
         } else {
           AuthManager().googleSignOut().then((value) => {
