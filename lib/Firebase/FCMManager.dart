@@ -1,6 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 
+typedef CallbackRemoteMessage = void Function(RemoteMessage event);
+
 class FCMManager {
   static final FCMManager _instance = FCMManager._internal();
 
@@ -10,20 +12,29 @@ class FCMManager {
 
   FCMManager._internal() {
     _firebaseMessaging = FirebaseMessaging.instance;
+    _onMessageCallback = null;
+    _onMessageOpenedAppCallback = null;
   }
 
   late FirebaseMessaging _firebaseMessaging;
   // late NotificationSettings _notificationSettings;
   late String? _token;
 
-  Function(RemoteMessage event)? _onMessageCallback;
-  Function(RemoteMessage event)? _onMessageOpenedAppCallback;
+  CallbackRemoteMessage? _onMessageCallback;
+  CallbackRemoteMessage? _onMessageOpenedAppCallback;
 
   String? get token => _token;
+
+  FCMManager buildRemoteMessage(CallbackRemoteMessage? onMessage, CallbackRemoteMessage? onMessageOpenedApp) {
+    _onMessageCallback = onMessage;
+    _onMessageOpenedAppCallback = onMessageOpenedApp;
+    return this;
+  }
 
   Future<void> initialize() async {
     await _checkPermission();
     await _getToken();
+    await _setListener();
   }
 
   Future<void> _checkPermission() async {
@@ -48,10 +59,7 @@ class FCMManager {
     });
   }
 
-  Future<void> setListener(void onMessage(RemoteMessage event)?, void onMessageOpenedApp(RemoteMessage event)?) async {
-    _onMessageCallback = onMessage;
-    _onMessageOpenedAppCallback = onMessageOpenedApp;
-
+  Future<void> _setListener() async {
     RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
       _onMessageOpenedApp(initialMessage);

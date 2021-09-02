@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
-import 'package:hr_project_flutter/General/FCMManager.dart';
+import 'package:hr_project_flutter/Firebase/FCMManager.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
-import 'package:hr_project_flutter/General/FirebaseCore.dart';
-import 'package:hr_project_flutter/General/LocalAuthManager.dart';
+import 'package:hr_project_flutter/Firebase/FirebaseCore.dart';
+import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
@@ -28,7 +28,6 @@ void main() async {
     SystemUiOverlay.top,
   ]);
   await FirebaseCore().initialize();
-  await FCMManager().initialize();
   runApp(const MainApp());
 }
 
@@ -46,8 +45,6 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    super.initState();
-
     readText(TDIUser.fileAccountJson).then(
       (json) => {
         if (json.isEmpty == false) TDIUser.account = TDIAccount.formJson(jsonDecode(json)) else TDIUser.account = null,
@@ -68,8 +65,10 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     Util().readPackageInfo();
 
-    FCMManager().setListener(_onMessage, _onMessageOpenedApp);
-    LocalAuthManager().initialze();
+    FCMManager().buildRemoteMessage(_onMessage, _onMessageOpenedApp).initialize().then((value) => null);
+    LocalAuthManager().initialze().then((value) => null);
+
+    super.initState();
   }
 
   GetMaterialApp _splashScreen() {

@@ -13,9 +13,15 @@ enum GOOGLE_AUTH_RESULT {
   ERROR_EMAIL,
 }
 
-AuthManager authManager = AuthManager();
-
 class AuthManager {
+  static final AuthManager _instance = AuthManager._internal();
+
+  factory AuthManager() {
+    return _instance;
+  }
+
+  AuthManager._internal();
+
   final FirebaseAuth _fbAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   User? _fbCurUser;

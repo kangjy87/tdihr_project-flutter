@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/General/Common.dart';
-import 'package:hr_project_flutter/General/LocalAuthManager.dart';
+import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:lottie/lottie.dart';
