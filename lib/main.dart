@@ -65,8 +65,10 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     Util().readPackageInfo();
 
-    FCMManager().buildRemoteMessage(_onMessage, _onMessageOpenedApp).initialize().then((value) => null);
-    LocalAuthManager().initialze().then((value) => null);
+    FCMManager()
+      ..buildRemoteMessage(_onMessage, _onMessageOpenedApp)
+      ..initialize().then((value) => null);
+    LocalAuthManager()..initialze().then((value) => null);
 
     super.initState();
   }

@@ -35,8 +35,10 @@ class ASSETS {
 }
 
 class URL {
-  static String tdiAuth = 'https://dev.groupware.tdi9.com/api/app/auth';
-  static String tdiLogin = 'https://dev.groupware.tdi9.com/app/login/token/';
+  // static String tdiAuth = 'https://dev.groupware.tdi9.com/api/app/auth';
+  // static String tdiLogin = 'https://dev.groupware.tdi9.com/app/login/token/';
+  static String tdiAuth = 'https://groupware.tdi9.com/api/app/auth';
+  static String tdiLogin = 'https://groupware.tdi9.com/app/login/token/';
 }
 
 class MESSAGES {

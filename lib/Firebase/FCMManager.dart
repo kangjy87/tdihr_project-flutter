@@ -25,10 +25,9 @@ class FCMManager {
 
   String get token => _token;
 
-  FCMManager buildRemoteMessage(CallbackRemoteMessage? onMessage, CallbackRemoteMessage? onMessageOpenedApp) {
+  void buildRemoteMessage(CallbackRemoteMessage? onMessage, CallbackRemoteMessage? onMessageOpenedApp) {
     _onMessageCallback = onMessage;
     _onMessageOpenedAppCallback = onMessageOpenedApp;
-    return this;
   }
 
   Future<void> initialize() async {

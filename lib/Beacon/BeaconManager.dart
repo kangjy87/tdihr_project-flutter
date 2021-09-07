@@ -44,20 +44,17 @@ class BeaconManager {
   bool get isBeaconEmpty => _beacons.isEmpty;
   List<Beacon> get beacons => _beacons;
 
-  BeaconManager buildBluetooth(VoidCallback? onBluetoothState, VoidCallback? onCheckAllRequriement) {
+  void buildBluetooth(VoidCallback? onBluetoothState, VoidCallback? onCheckAllRequriement) {
     this.onBluetoothState = onBluetoothState;
     this.onCheckAllRequriement = onCheckAllRequriement;
-    return this;
   }
 
-  BeaconManager buildBeacon(VoidCallback? onScanBeacon) {
+  void buildBeacon(VoidCallback? onScanBeacon) {
     this.onScanBeacon = onScanBeacon;
-    return this;
   }
 
-  BeaconManager buildBeaconRegion(String identifier, String proximityUUID) {
+  void buildBeaconRegion(String identifier, String proximityUUID) {
     _regions.add(Region(identifier: identifier, proximityUUID: proximityUUID));
-    return this;
   }
 
   Future<void> initialize() async {
