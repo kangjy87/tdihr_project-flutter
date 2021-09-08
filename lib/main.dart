@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/Firebase/FCMManager.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
@@ -34,10 +35,10 @@ void main() async {
 class MainApp extends StatefulWidget {
   const MainApp({Key? key}) : super(key: key);
   @override
-  MainAppState createState() => MainAppState();
+  _MainAppState createState() => _MainAppState();
 }
 
-class MainAppState extends State<MainApp> with TickerProviderStateMixin {
+class _MainAppState extends State<MainApp> with TickerProviderStateMixin, WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return _splashScreen();
@@ -45,6 +46,8 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
+
     readText(TDIUser.fileAccountJson).then(
       (json) => {
         if (json.isEmpty == false) TDIUser.account = TDIAccount.formJson(jsonDecode(json)) else TDIUser.account = null,
@@ -65,10 +68,33 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
 
     Util().readPackageInfo();
 
-    FCMManager().buildRemoteMessage(_onMessage, _onMessageOpenedApp).initialize().then((value) => null);
-    LocalAuthManager().initialze().then((value) => null);
+    FCMManager()
+      ..buildRemoteMessage(_onMessage, _onMessageOpenedApp)
+      ..initialize().then((value) => null);
+    LocalAuthManager()..initialze().then((value) => null);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    var cur = Get.currentRoute;
+    if (cur == PAGES.beacon) {
+      BeaconManager().changeAppLifecycleState(state);
+    }
+    if (TDIUser.isLink == true) {
+      if (state == AppLifecycleState.resumed) {
+        if (cur != PAGES.tdiGroupware) {
+          Get.toNamed(PAGES.tdiGroupware);
+        }
+      }
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   GetMaterialApp _splashScreen() {
@@ -90,6 +116,13 @@ class MainAppState extends State<MainApp> with TickerProviderStateMixin {
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
-    Util().showSnackBar(message.notification!.title!, message.notification!.body!);
+    // Util().showSnackBar(message.notification!.title!, message.notification!.body!);
+    TDIUser.isLink = false;
+    if (message.data.isNotEmpty == true) {
+      TDIUser.isLink = message.data.keys.contains("link");
+      if (TDIUser.isLink == true) {
+        TDIUser.linkURL = message.data["link"];
+      }
+    }
   }
 }

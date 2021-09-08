@@ -18,17 +18,16 @@ class FCMManager {
 
   late FirebaseMessaging _firebaseMessaging;
   // late NotificationSettings _notificationSettings;
-  late String? _token;
+  late String _token;
 
   CallbackRemoteMessage? _onMessageCallback;
   CallbackRemoteMessage? _onMessageOpenedAppCallback;
 
-  String? get token => _token;
+  String get token => _token;
 
-  FCMManager buildRemoteMessage(CallbackRemoteMessage? onMessage, CallbackRemoteMessage? onMessageOpenedApp) {
+  void buildRemoteMessage(CallbackRemoteMessage? onMessage, CallbackRemoteMessage? onMessageOpenedApp) {
     _onMessageCallback = onMessage;
     _onMessageOpenedAppCallback = onMessageOpenedApp;
-    return this;
   }
 
   Future<void> initialize() async {
@@ -54,8 +53,10 @@ class FCMManager {
   }
 
   Future<void> _getToken() async {
-    _token = await _firebaseMessaging.getToken().then((value) {
-      slog.i('FCM Token : $value');
+    await _firebaseMessaging.getToken().then((value) {
+      // slog.i('FCM Token : $value');
+      print('FCM Token : $value');
+      _token = value!;
     });
   }
 

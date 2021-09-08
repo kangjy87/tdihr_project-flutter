@@ -48,7 +48,7 @@ class AuthManager {
     return returnValue;
   }
 
-  Future<GOOGLE_AUTH_RESULT> googleSingIn() async {
+  Future<GOOGLE_AUTH_RESULT> googleSingIn(String fcmToken) async {
     try {
       final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
       if (gUser == null) return GOOGLE_AUTH_RESULT.FAILED;
@@ -70,7 +70,7 @@ class AuthManager {
       if (Platform.isAndroid == true)
         platformOS = OS_TYPE.AOS.convertString;
       else if (Platform.isIOS) platformOS = OS_TYPE.IOS.convertString;
-      TDIUser.account = TDIAccount(PROVIDERS.google, fUser.uid, fUser.email!, fUser.displayName!, platformOS);
+      TDIUser.account = TDIAccount(PROVIDERS.google, fcmToken, fUser.email!, fUser.displayName!, platformOS);
       var response = await Dio().post(URL.tdiAuth, data: TDIUser.account!.toData());
 
       if (response.statusCode == 200) {

@@ -16,14 +16,38 @@ class TDIGroupwarePage extends StatefulWidget {
   TDIGroupwarePageState createState() => TDIGroupwarePageState();
 }
 
-class TDIGroupwarePageState extends State<TDIGroupwarePage> {
+class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingObserver {
   late WebViewController _controller;
   final Completer<WebViewController> _controllerComplete = Completer<WebViewController>();
 
   @override
   void initState() {
+    WidgetsBinding.instance!.addObserver(this);
+    if (Platform.isAndroid) {
+      WebView.platform = SurfaceAndroidWebView();
+    }
+
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    var cur = Get.currentRoute;
+    if (TDIUser.isLink == true) {
+      if (state == AppLifecycleState.resumed) {
+        if (cur == PAGES.tdiGroupware) {
+          _controller.loadUrl(TDIUser.linkURL);
+        }
+      }
+    }
+
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -44,7 +68,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   Widget _buildWebView() {
     return WebView(
       // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-      initialUrl: URL.tdiLogin + TDIUser.token!.token,
+      initialUrl: TDIUser.isLink ? TDIUser.linkURL : URL.tdiLogin + TDIUser.token!.token,
       onWebViewCreated: (WebViewController webViewController) {
         _controllerComplete.complete(webViewController);
         _controllerComplete.future.then((value) => _controller = value);
@@ -71,6 +95,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
       },
       onPageFinished: (String url) {
         slog.i('page finished $url');
+        TDIUser.isLink = false;
       },
       navigationDelegate: (NavigationRequest request) {
         slog.i('allowing navigation to ${request.url}');
