@@ -54,7 +54,8 @@ class FCMManager {
 
   Future<void> _getToken() async {
     await _firebaseMessaging.getToken().then((value) {
-      slog.i('FCM Token : $value');
+      // slog.i('FCM Token : $value');
+      print('FCM Token : $value');
       _token = value!;
     });
   }
