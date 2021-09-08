@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
 
-class BeaconCtrl extends GetxController with WidgetsBindingObserver {
+class BeaconCtrl extends GetxController {
   var bluetoothState = BluetoothState.stateOff.obs;
   var authorizationStatus = AuthorizationStatus.notDetermined.obs;
   var isAuthorization = false.obs;
@@ -35,19 +34,11 @@ class BeaconCtrl extends GetxController with WidgetsBindingObserver {
       ..initialize();
 
     super.onInit();
-    WidgetsBinding.instance!.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    BeaconManager().changeAppLifecycleState(state);
-    super.didChangeAppLifecycleState(state);
   }
 
   @override
   void onClose() {
     BeaconManager().close();
-    WidgetsBinding.instance!.removeObserver(this);
     super.onClose();
   }
 }

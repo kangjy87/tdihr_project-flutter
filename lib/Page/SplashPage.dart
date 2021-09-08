@@ -14,20 +14,24 @@ class SplashPage extends StatefulWidget {
 class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   void _goNextStep() {
-    if (TDIUser.isAleadyLogin == true) {
-      LocalAuthManager().authenticate().then((value) {
-        switch (value) {
-          case LOCAL_AUTH_RESULT.SUCCESS:
-          case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
-            Get.toNamed(PAGES.tdiGroupware);
-            break;
-          case LOCAL_AUTH_RESULT.FAILED:
-            Get.toNamed(PAGES.title);
-            break;
-        }
-      });
+    if (TDIUser.isLink == true) {
+      Get.toNamed(PAGES.tdiGroupware);
     } else {
-      Get.toNamed(PAGES.title);
+      if (TDIUser.isAleadyLogin == true) {
+        LocalAuthManager().authenticate().then((value) {
+          switch (value) {
+            case LOCAL_AUTH_RESULT.SUCCESS:
+            case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+              Get.toNamed(PAGES.tdiGroupware);
+              break;
+            case LOCAL_AUTH_RESULT.FAILED:
+              Get.toNamed(PAGES.title);
+              break;
+          }
+        });
+      } else {
+        Get.toNamed(PAGES.title);
+      }
     }
   }
 

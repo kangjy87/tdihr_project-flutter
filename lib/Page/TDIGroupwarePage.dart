@@ -44,7 +44,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> {
   Widget _buildWebView() {
     return WebView(
       // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-      initialUrl: URL.tdiLogin + TDIUser.token!.token,
+      initialUrl: TDIUser.isLink ? TDIUser.linkURL : URL.tdiLogin + TDIUser.token!.token,
       onWebViewCreated: (WebViewController webViewController) {
         _controllerComplete.complete(webViewController);
         _controllerComplete.future.then((value) => _controller = value);
