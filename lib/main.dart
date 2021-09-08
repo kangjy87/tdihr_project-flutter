@@ -88,7 +88,11 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
       BeaconManager().changeAppLifecycleState(state);
     }
     if (TDIUser.isLink == true) {
-      Get.toNamed(PAGES.tdiGroupware);
+      if (state == AppLifecycleState.resumed) {
+        if (cur != PAGES.tdiGroupware) {
+          Get.toNamed(PAGES.tdiGroupware);
+        }
+      }
     }
     super.didChangeAppLifecycleState(state);
   }
