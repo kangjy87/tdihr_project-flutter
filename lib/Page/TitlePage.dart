@@ -52,10 +52,10 @@ class TitlePageState extends State<TitlePage> {
           switch (value) {
             case LOCAL_AUTH_RESULT.SUCCESS:
             case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
-              Get.toNamed(PAGES.tdiGroupware);
+              Get.toNamed(Pages.nameGroupware);
               break;
             case LOCAL_AUTH_RESULT.FAILED:
-              Get.toNamed(PAGES.title);
+              Get.toNamed(Pages.nameTitle);
               setState(() {});
               break;
           }
@@ -182,7 +182,7 @@ class TitlePageState extends State<TitlePage> {
 
   Widget _buildTDIGroupwareButton() {
     return ElevatedButton(
-      onPressed: () => Get.toNamed(PAGES.tdiGroupware),
+      onPressed: () => Get.toNamed(Pages.nameGroupware),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -213,7 +213,7 @@ class TitlePageState extends State<TitlePage> {
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
       onPressed: () => LocalAuthManager().authenticate().then((value) {
-        if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(PAGES.tdiGroupware);
+        if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(Pages.nameGroupware);
       }),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
@@ -244,7 +244,7 @@ class TitlePageState extends State<TitlePage> {
 
   Widget _buildBeaconButton() {
     return ElevatedButton(
-      onPressed: () => Get.toNamed(PAGES.beacon),
+      onPressed: () => Get.toNamed(Pages.nameBeacon),
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(

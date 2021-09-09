@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,12 +12,12 @@ import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class TDIGroupwarePage extends StatefulWidget {
+class GroupwarePage extends StatefulWidget {
   @override
-  TDIGroupwarePageState createState() => TDIGroupwarePageState();
+  _GroupwarePageState createState() => _GroupwarePageState();
 }
 
-class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingObserver {
+class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserver {
   late WebViewController _controller;
   final Completer<WebViewController> _controllerComplete = Completer<WebViewController>();
 
@@ -41,7 +42,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
     var cur = Get.currentRoute;
     if (TDIUser.isLink == true) {
       if (state == AppLifecycleState.resumed) {
-        if (cur == PAGES.tdiGroupware) {
+        if (cur == Pages.nameGroupware) {
           _controller.loadUrl(TDIUser.linkURL);
         }
       }
@@ -147,7 +148,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
   void _goTitleAndLogout() {
     AuthManager().googleSignOut().then((value) => {
           TDIUser.clearLoginData(),
-          Get.toNamed(PAGES.title),
+          Get.toNamed(Pages.nameTitle),
         });
   }
 
@@ -156,7 +157,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
       _controller.goBack();
       return Future.value(false);
     } else {
-      Get.toNamed(PAGES.title);
+      Get.toNamed(Pages.nameTitle); // 더 이상 back를 할 수 없으면 title로 이동
       return Future.value(false);
     }
   }

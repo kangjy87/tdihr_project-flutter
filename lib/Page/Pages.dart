@@ -1,24 +1,31 @@
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/Beacon/BeaconCtrl.dart';
+import 'package:hr_project_flutter/Beacon/BeaconController.dart';
 import 'package:hr_project_flutter/Beacon/BeaconPage.dart';
-import 'package:hr_project_flutter/Page/TitlePage.dart';
 import 'package:hr_project_flutter/Page/SplashPage.dart';
-import 'package:hr_project_flutter/Page/TDIGroupwarePage.dart';
-
-class PAGES {
-  static String splash = '/page_splash';
-  static String title = '/page_title';
-  static String tdiGroupware = '/page_tdi_groupware';
-  static String beacon = '/beacon';
-}
+import 'package:hr_project_flutter/Page/GroupwarePage.dart';
+import 'package:hr_project_flutter/Page/TitlePage.dart';
 
 class Pages {
+  static String nameSplash = '/splash';
+  static String nameTitle = '/title';
+  static String nameGroupware = '/groupware';
+  static String nameBeacon = '/beacon';
+
   static List<GetPage> get container => [
-        GetPage(name: PAGES.splash, page: () => SplashPage()),
-        GetPage(name: PAGES.title, page: () => TitlePage()),
-        GetPage(name: PAGES.tdiGroupware, page: () => TDIGroupwarePage()),
         GetPage(
-          name: PAGES.beacon,
+          name: nameSplash,
+          page: () => SplashPage(),
+        ),
+        GetPage(
+          name: nameTitle,
+          page: () => TitlePage(),
+        ),
+        GetPage(
+          name: nameGroupware,
+          page: () => GroupwarePage(),
+        ),
+        GetPage(
+          name: nameBeacon,
           page: () => BeaconPage(),
           binding: BeaconBinding(),
         ),

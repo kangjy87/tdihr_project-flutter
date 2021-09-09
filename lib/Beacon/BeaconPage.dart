@@ -1,13 +1,14 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/Beacon/BeaconCtrl.dart';
+import 'package:hr_project_flutter/Beacon/BeaconController.dart';
 import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 
-class BeaconPage extends GetView<BeaconCtrl> {
+class BeaconPage extends GetView<BeaconController> {
   @override
   Widget build(BuildContext context) {
     slog.i("Flutter Sample : Beacon");

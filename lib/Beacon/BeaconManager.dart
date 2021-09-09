@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 
@@ -58,12 +59,12 @@ class BeaconManager {
   }
 
   Future<void> initialize() async {
-    await listeningBluetooth();
-    await checkAllRequirements();
+    await _listeningBluetooth();
+    await _checkAllRequirements();
     if (onScanBeacon != null) await startScanBeacon();
   }
 
-  Future<void> listeningBluetooth() async {
+  Future<void> _listeningBluetooth() async {
     slog.i('Listening to bluetooth state');
     _streamBluetooth = flutterBeacon.bluetoothStateChanged().listen((BluetoothState state) async {
       _bluetoothState = state;
@@ -71,7 +72,7 @@ class BeaconManager {
     });
   }
 
-  Future<void> checkAllRequirements() async {
+  Future<void> _checkAllRequirements() async {
     _bluetoothState = await flutterBeacon.bluetoothState;
     slog.i('Bluetooth : $_bluetoothState');
 
@@ -92,7 +93,7 @@ class BeaconManager {
           _streamBluetooth?.resume();
         }
       }
-      await checkAllRequirements();
+      await _checkAllRequirements();
     } else if (state == AppLifecycleState.paused) {
       _streamBluetooth?.pause();
     }
@@ -111,7 +112,7 @@ class BeaconManager {
     _streamRanging = flutterBeacon.ranging(_regions).listen((RangingResult result) async {
       slog.i('Beacon ranging : $result');
 
-      await checkAllRequirements();
+      await _checkAllRequirements();
 
       _regionBeacons[result.region] = result.beacons;
       _beacons.clear();
