@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'Logger.dart';
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();

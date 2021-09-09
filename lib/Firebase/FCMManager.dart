@@ -38,13 +38,7 @@ class FCMManager {
 
   Future<void> _checkPermission() async {
     // _notificationSettings = await _firebaseMessaging
-    await _firebaseMessaging
-        .requestPermission(
-      announcement: true,
-      carPlay: true,
-      criticalAlert: true,
-    )
-        .then((value) {
+    await _firebaseMessaging.requestPermission(announcement: true, carPlay: true, criticalAlert: true).then((value) {
       slog.i('alert : ${value.alert}');
       slog.i('announcement : ${value.announcement}');
       slog.i('carPlay : ${value.carPlay}');

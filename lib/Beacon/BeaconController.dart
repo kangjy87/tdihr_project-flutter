@@ -1,8 +1,9 @@
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
 
-class BeaconCtrl extends GetxController {
+class BeaconController extends GetxController {
   var bluetoothState = BluetoothState.stateOff.obs;
   var authorizationStatus = AuthorizationStatus.notDetermined.obs;
   var isAuthorization = false.obs;
@@ -24,12 +25,13 @@ class BeaconCtrl extends GetxController {
         },
       )
       ..buildBeacon(() {
-        if (BeaconManager().isBeaconEmpty == true)
+        if (BeaconManager().isBeaconEmpty == true) {
           scanCount.value = 0;
-        else
+        } else {
           scanCount.value++;
+        }
       })
-      ..buildBeaconRegion('BeaconType1', '8fef2e11-d140-2ed1-2eb1-4138edcabe09')
+      ..buildBeaconRegion('BeaconType1', '8fef2e11-d140-2ed1-2eb1-4138edcabe09') // Beacon Device 등록
       ..buildBeaconRegion('BeaconType2', '4d9c357a-0640-11ec-9a03-0242ac130003')
       ..initialize();
 
@@ -46,6 +48,6 @@ class BeaconCtrl extends GetxController {
 class BeaconBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<BeaconCtrl>(() => BeaconCtrl());
+    Get.lazyPut<BeaconController>(() => BeaconController());
   }
 }

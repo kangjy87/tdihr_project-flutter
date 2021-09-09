@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,12 +12,12 @@ import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class TDIGroupwarePage extends StatefulWidget {
+class GroupwarePage extends StatefulWidget {
   @override
-  TDIGroupwarePageState createState() => TDIGroupwarePageState();
+  _GroupwarePageState createState() => _GroupwarePageState();
 }
 
-class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingObserver {
+class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserver {
   late WebViewController _controller;
   final Completer<WebViewController> _controllerComplete = Completer<WebViewController>();
 
@@ -39,10 +40,10 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     var cur = Get.currentRoute;
-    if (TDIUser.isLink == true) {
+    if (kIsPushLink == true) {
       if (state == AppLifecycleState.resumed) {
-        if (cur == PAGES.tdiGroupware) {
-          _controller.loadUrl(TDIUser.linkURL);
+        if (cur == Pages.nameGroupware) {
+          _controller.loadUrl(kPushLinkURL);
         }
       }
     }
@@ -68,7 +69,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
   Widget _buildWebView() {
     return WebView(
       // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-      initialUrl: TDIUser.isLink ? TDIUser.linkURL : URL.tdiLogin + TDIUser.token!.token,
+      initialUrl: kIsPushLink ? kPushLinkURL : URL.tdiLogin + TDIUser.token!.token,
       onWebViewCreated: (WebViewController webViewController) {
         _controllerComplete.complete(webViewController);
         _controllerComplete.future.then((value) => _controller = value);
@@ -95,7 +96,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
       },
       onPageFinished: (String url) {
         slog.i('page finished $url');
-        TDIUser.isLink = false;
+        kIsPushLink = false;
       },
       navigationDelegate: (NavigationRequest request) {
         slog.i('allowing navigation to ${request.url}');
@@ -140,14 +141,14 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
     var error = url.queryParameters['error'];
     if (error == 'unauthenticated') {
       _goTitleAndLogout();
-      Util().showToastMessage(MESSAGES.errLoginFailed);
+      showToastMessage(MESSAGES.errLoginFailed);
     }
   }
 
   void _goTitleAndLogout() {
     AuthManager().googleSignOut().then((value) => {
-          TDIUser.clearLoginData(),
-          Get.toNamed(PAGES.title),
+          TDIUser.clearData(),
+          Get.toNamed(Pages.nameTitle),
         });
   }
 
@@ -156,7 +157,7 @@ class TDIGroupwarePageState extends State<TDIGroupwarePage> with WidgetsBindingO
       _controller.goBack();
       return Future.value(false);
     } else {
-      Get.toNamed(PAGES.title);
+      Get.toNamed(Pages.nameTitle); // 더 이상 back를 할 수 없으면 title로 이동
       return Future.value(false);
     }
   }

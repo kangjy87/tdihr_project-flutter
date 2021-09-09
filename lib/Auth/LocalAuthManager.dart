@@ -50,7 +50,7 @@ class LocalAuthManager {
     return err;
   }
 
-  Future<void> initialze() async {
+  Future<void> initialize() async {
     await _checkDeviceSupported();
     await _checkBiometrics();
     await _checkAvailableBiometrics();
@@ -106,10 +106,7 @@ class LocalAuthManager {
         useErrorDialogs: true,
         stickyAuth: true,
         sensitiveTransaction: true,
-        androidAuthStrings: AndroidAuthMessages(
-          signInTitle: STRINGS.tdiGroupware,
-          biometricHint: ' ',
-        ),
+        androidAuthStrings: AndroidAuthMessages(signInTitle: STRINGS.tdiGroupware, biometricHint: ' '),
         // biometricOnly: true,
       )
           .then((value) {

@@ -17,10 +17,6 @@ class TDIAccount {
         os = json["os"];
 
   Map<String, dynamic> toJson() => {"provider": provider, "token": token, "email": email, "name": name, "os": os};
-
-  toData() {
-    return {"provider": provider, "token": token, "email": email, "name": name, "os": os};
-  }
 }
 
 class TDIToken {
@@ -41,10 +37,7 @@ class TDIUser {
   static bool readUserJSON = false;
   static bool readUserTokenJSON = false;
 
-  static bool isLink = false;
-  static String linkURL = "";
-
-  static void clearLoginData() {
+  static void clearData() {
     deleteFile(fileAccountJson);
     deleteFile(fileTokenJson);
     account = null;

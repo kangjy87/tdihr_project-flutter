@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
+import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashPage extends StatefulWidget {
   @override
-  SplashPageState createState() => SplashPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   void _goNextStep() {
-    if (TDIUser.isLink == true) {
-      Get.toNamed(PAGES.tdiGroupware);
+    if (kIsPushLink == true) {
+      Get.toNamed(Pages.nameGroupware);
     } else {
       if (TDIUser.isAleadyLogin == true) {
         LocalAuthManager().authenticate().then((value) {
           switch (value) {
             case LOCAL_AUTH_RESULT.SUCCESS:
             case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
-              Get.toNamed(PAGES.tdiGroupware);
+              Get.toNamed(Pages.nameGroupware); // local auth 성공 or local auth가 없으면 groupware page로 이동
               break;
             case LOCAL_AUTH_RESULT.FAILED:
-              Get.toNamed(PAGES.title);
+              Get.toNamed(Pages.nameTitle);
               break;
           }
         });
       } else {
-        Get.toNamed(PAGES.title);
+        Get.toNamed(Pages.nameTitle);
       }
     }
   }
