@@ -54,7 +54,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
     readText(TDIUser.fileAccountJson).then(_readAcountComplete);
     readText(TDIUser.fileTokenJson).then(_readTokenComplete);
 
-    Util().readPackageInfo();
+    readPackageInfo();
 
     FCMManager()
       ..buildRemoteMessage(_onMessage, _onMessageOpenedApp)
@@ -89,7 +89,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
     if (cur == Pages.nameBeacon) {
       BeaconManager().changeAppLifecycleState(state);
     }
-    if (TDIUser.isLink == true) {
+    if (kIsPushLink == true) {
       if (state == AppLifecycleState.resumed) {
         if (cur != Pages.nameGroupware) {
           Get.toNamed(Pages.nameGroupware);
@@ -114,16 +114,16 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   }
 
   void _onMessage(RemoteMessage message) {
-    Util().showSnackBar(message.notification!.title!, message.notification!.body!);
+    showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
-    // Util().showSnackBar(message.notification!.title!, message.notification!.body!);
-    TDIUser.isLink = false;
+    // showSnackBar(message.notification!.title!, message.notification!.body!);
+    kIsPushLink = false;
     if (message.data.isNotEmpty == true) {
-      TDIUser.isLink = message.data.keys.contains("link");
-      if (TDIUser.isLink == true) {
-        TDIUser.linkURL = message.data["link"];
+      kIsPushLink = message.data.keys.contains("link");
+      if (kIsPushLink == true) {
+        kPushLinkURL = message.data["link"];
       }
     }
   }

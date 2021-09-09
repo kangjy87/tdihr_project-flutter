@@ -74,7 +74,7 @@ class AuthManager {
         platformOS = OS_TYPE.IOS.convertString;
       }
       TDIUser.account = TDIAccount(PROVIDERS.google, fcmToken, fUser.email!, fUser.displayName!, platformOS);
-      var response = await Dio().post(URL.tdiAuth, data: TDIUser.account!.toData());
+      var response = await Dio().post(URL.tdiAuth, data: TDIUser.account!.toJson());
 
       if (response.statusCode == 200) {
         TDIUser.token = TDIToken.formJson(response.data);

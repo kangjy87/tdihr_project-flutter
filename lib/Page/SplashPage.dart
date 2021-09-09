@@ -14,7 +14,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   void _goNextStep() {
-    if (TDIUser.isLink == true) {
+    if (kIsPushLink == true) {
       Get.toNamed(Pages.nameGroupware);
     } else {
       if (TDIUser.isAleadyLogin == true) {

@@ -40,10 +40,10 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     var cur = Get.currentRoute;
-    if (TDIUser.isLink == true) {
+    if (kIsPushLink == true) {
       if (state == AppLifecycleState.resumed) {
         if (cur == Pages.nameGroupware) {
-          _controller.loadUrl(TDIUser.linkURL);
+          _controller.loadUrl(kPushLinkURL);
         }
       }
     }
@@ -69,7 +69,7 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
   Widget _buildWebView() {
     return WebView(
       // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-      initialUrl: TDIUser.isLink ? TDIUser.linkURL : URL.tdiLogin + TDIUser.token!.token,
+      initialUrl: kIsPushLink ? kPushLinkURL : URL.tdiLogin + TDIUser.token!.token,
       onWebViewCreated: (WebViewController webViewController) {
         _controllerComplete.complete(webViewController);
         _controllerComplete.future.then((value) => _controller = value);
@@ -96,7 +96,7 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
       },
       onPageFinished: (String url) {
         slog.i('page finished $url');
-        TDIUser.isLink = false;
+        kIsPushLink = false;
       },
       navigationDelegate: (NavigationRequest request) {
         slog.i('allowing navigation to ${request.url}');
@@ -141,13 +141,13 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
     var error = url.queryParameters['error'];
     if (error == 'unauthenticated') {
       _goTitleAndLogout();
-      Util().showToastMessage(MESSAGES.errLoginFailed);
+      showToastMessage(MESSAGES.errLoginFailed);
     }
   }
 
   void _goTitleAndLogout() {
     AuthManager().googleSignOut().then((value) => {
-          TDIUser.clearLoginData(),
+          TDIUser.clearData(),
           Get.toNamed(Pages.nameTitle),
         });
   }

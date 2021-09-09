@@ -9,7 +9,7 @@ enum OS_TYPE {
   IOS,
 }
 
-extension OSTypeExt on OS_TYPE {
+extension OSTypeEx on OS_TYPE {
   String get convertString {
     switch (this) {
       case OS_TYPE.NONE:
@@ -55,51 +55,39 @@ class STRINGS {
   static String beacon = "Beacon";
 }
 
-class Util {
-  static final Util _instance = Util._internal();
-
-  String _appName = "";
-  String _packageName = "";
-  String _appVersion = "";
-  String _buildNumber = "";
-
-  String get appName => _appName;
-  String get packageName => _packageName;
-  String get appVersion => _appVersion;
-  String get buildNumber => _buildNumber;
-
-  factory Util() {
-    return _instance;
-  }
-
-  Util._internal();
-
-  void readPackageInfo() {
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      _appName = packageInfo.appName;
-      _packageName = packageInfo.packageName;
-      _appVersion = packageInfo.version;
-      _buildNumber = packageInfo.buildNumber;
-    });
-  }
-
-  Future<bool?> showToastMessage(String message) {
-    return Fluttertoast.showToast(
-        msg: message,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.blueAccent,
-        fontSize: 16.0,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT);
-  }
-
-  void showSnackBar(String title, String message) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
-      colorText: Colors.white,
-      backgroundColor: Colors.blue[800],
-    );
-  }
+Future<bool?> showToastMessage(String message) {
+  return Fluttertoast.showToast(
+      msg: message,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.blueAccent,
+      fontSize: 16.0,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT);
 }
+
+void showSnackBar(String title, String message) {
+  Get.snackbar(
+    title,
+    message,
+    snackPosition: SnackPosition.TOP,
+    colorText: Colors.white,
+    backgroundColor: Colors.blue[800],
+  );
+}
+
+String kAppName = "";
+String kPackageName = "";
+String kAppVersion = "";
+String kBuildNumber = "";
+
+void readPackageInfo() {
+  PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    kAppName = packageInfo.appName;
+    kPackageName = packageInfo.packageName;
+    kAppVersion = packageInfo.version;
+    kBuildNumber = packageInfo.buildNumber;
+  });
+}
+
+bool kIsPushLink = false;
+String kPushLinkURL = "";

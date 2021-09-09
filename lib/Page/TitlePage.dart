@@ -9,10 +9,10 @@ import 'package:hr_project_flutter/Page/Pages.dart';
 
 class TitlePage extends StatefulWidget {
   @override
-  TitlePageState createState() => TitlePageState();
+  _TitlePageState createState() => _TitlePageState();
 }
 
-class TitlePageState extends State<TitlePage> {
+class _TitlePageState extends State<TitlePage> {
   bool _signining = false;
 
   @override
@@ -36,7 +36,7 @@ class TitlePageState extends State<TitlePage> {
             Expanded(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: Text('ver. ${Util().appVersion}'),
+                child: Text('ver. $kAppVersion'),
               ),
             ),
           ],
@@ -62,12 +62,12 @@ class TitlePageState extends State<TitlePage> {
         });
         break;
       case GOOGLE_AUTH_RESULT.ERROR_EMAIL:
-        TDIUser.clearLoginData();
-        Util().showToastMessage(MESSAGES.errLoginEmail);
+        TDIUser.clearData();
+        showToastMessage(MESSAGES.errLoginEmail);
         break;
       case GOOGLE_AUTH_RESULT.FAILED:
-        TDIUser.clearLoginData();
-        Util().showToastMessage(MESSAGES.errLoginFailed);
+        TDIUser.clearData();
+        showToastMessage(MESSAGES.errLoginFailed);
         break;
       default:
         break;
@@ -86,11 +86,11 @@ class TitlePageState extends State<TitlePage> {
       widgets.add(_buildSigniningProgress());
     else if (TDIUser.isAleadyLogin == true) {
       if (LocalAuthManager().authenticated == true) {
-        widgets.add(_buildTDIGroupwareButton());
+        widgets.add(_buildGroupwareButton());
         widgets.add(SizedBox(height: 1));
       } else {
         if (LocalAuthManager().authResult == LOCAL_AUTH_RESULT.NO_AUTHORIZE) {
-          widgets.add(_buildTDIGroupwareButton());
+          widgets.add(_buildGroupwareButton());
           widgets.add(SizedBox(height: 1));
         } else {
           widgets.add(_buildAuthenticateButton());
@@ -123,7 +123,7 @@ class TitlePageState extends State<TitlePage> {
           AuthManager().googleSignOut().then((value) => {
                 _signining = false,
                 setState(() {}),
-                TDIUser.clearLoginData(),
+                TDIUser.clearData(),
               });
         }
       },
@@ -180,7 +180,7 @@ class TitlePageState extends State<TitlePage> {
     );
   }
 
-  Widget _buildTDIGroupwareButton() {
+  Widget _buildGroupwareButton() {
     return ElevatedButton(
       onPressed: () => Get.toNamed(Pages.nameGroupware),
       style: ButtonStyle(
@@ -213,16 +213,19 @@ class TitlePageState extends State<TitlePage> {
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
       onPressed: () => LocalAuthManager().authenticate().then((value) {
-        if (value == LOCAL_AUTH_RESULT.SUCCESS) Get.toNamed(Pages.nameGroupware);
+        if (value == LOCAL_AUTH_RESULT.SUCCESS) {
+          Get.toNamed(Pages.nameGroupware);
+        }
       }),
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-            ),
-          )),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+          ),
+        ),
+      ),
       child: Container(
         width: 300,
         height: 30,
@@ -246,13 +249,14 @@ class TitlePageState extends State<TitlePage> {
     return ElevatedButton(
       onPressed: () => Get.toNamed(Pages.nameBeacon),
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-            ),
-          )),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+          ),
+        ),
+      ),
       child: Container(
         width: 300,
         height: 30,
