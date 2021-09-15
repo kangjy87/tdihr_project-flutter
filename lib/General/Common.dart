@@ -53,6 +53,7 @@ class STRINGS {
   static String signining = "로그인중 입니다 ...";
   static String logout = "로그아웃";
   static String beacon = "Beacon";
+  static String geofence = "Geofence";
 }
 
 Future<bool?> showToastMessage(String message) {

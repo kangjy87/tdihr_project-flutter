@@ -93,7 +93,7 @@ class BeaconManager {
           _streamBluetooth?.resume();
         }
       }
-      await _checkAllRequirements();
+      // await _checkAllRequirements();
     } else if (state == AppLifecycleState.paused) {
       _streamBluetooth?.pause();
     }
