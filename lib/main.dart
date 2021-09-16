@@ -13,6 +13,7 @@ import 'package:hr_project_flutter/Firebase/FCMManager.dart';
 import 'package:hr_project_flutter/Firebase/FirebaseCore.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
+import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Geofence/GeofenceManager.dart';
 import 'package:hr_project_flutter/Geofence/LocationPermmision.dart';
@@ -146,6 +147,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   }
 
   void _onGeofenceEvent(dynamic data) {
+    slog.i('geofence event: $data');
     showToastMessage('geofence event: $data');
   }
 }
