@@ -54,9 +54,7 @@ class BeaconPage extends GetView<BeaconController> {
     final service = controller.isLocationService.value;
     return IconButton(
       tooltip: service ? "Location Service ON" : "Location Service OFF",
-      icon: Icon(
-        service ? Icons.location_on : Icons.location_off,
-      ),
+      icon: Icon(service ? Icons.location_on : Icons.location_off),
       color: service ? Colors.lightBlueAccent : Colors.red,
       onPressed: service ? () {} : () => _handleOpenLocationSettings(context),
     );
@@ -94,14 +92,10 @@ class BeaconPage extends GetView<BeaconController> {
         ? Center(child: CircularProgressIndicator())
         : ListView(
             children: ListTile.divideTiles(
-              context: context,
-              tiles: BeaconManager().beacons.map(
-                (beacon) {
+                context: context,
+                tiles: BeaconManager().beacons.map((beacon) {
                   return ListTile(
-                    title: Text(
-                      beacon.proximityUUID,
-                      style: TextStyle(fontSize: 15.0),
-                    ),
+                    title: Text(beacon.proximityUUID, style: TextStyle(fontSize: 15.0)),
                     subtitle: new Row(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
@@ -114,20 +108,15 @@ class BeaconPage extends GetView<BeaconController> {
                           fit: FlexFit.tight,
                         ),
                         Flexible(
-                          child: Text(
-                            "Accuracy: ${beacon.accuracy}m\nRSSI: ${beacon.rssi}",
-                            style: TextStyle(fontSize: 13.0),
-                          ),
+                          child: Text("Accuracy: ${beacon.accuracy}m\nRSSI: ${beacon.rssi}",
+                              style: TextStyle(fontSize: 13.0)),
                           flex: 2,
                           fit: FlexFit.tight,
                         )
                       ],
                     ),
                   );
-                },
-              ),
-            ).toList(),
-          );
+                })).toList());
   }
 
   void _handleOpenLocationSettings(BuildContext context) async {
@@ -135,20 +124,19 @@ class BeaconPage extends GetView<BeaconController> {
       await flutterBeacon.openLocationSettings;
     } else if (Platform.isIOS) {
       await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("위치 서비스 활성화"),
-            content: Text("위치 서비스를 활성화해주세요."),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("위치 서비스 활성화"),
+              content: Text("위치 서비스를 활성화해주세요."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -156,25 +144,24 @@ class BeaconPage extends GetView<BeaconController> {
     if (Platform.isAndroid) {
       try {
         await flutterBeacon.openBluetoothSettings;
-      } on PlatformException catch (e) {
-        slog.i(e);
+      } on PlatformException catch (ex) {
+        slog.i(ex);
       }
     } else if (Platform.isIOS) {
       await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("블루투스 활성화"),
-            content: Text("블루투스를 활성화해주세요."),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("블루투스 활성화"),
+              content: Text("블루투스를 활성화해주세요."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          });
     }
   }
 }

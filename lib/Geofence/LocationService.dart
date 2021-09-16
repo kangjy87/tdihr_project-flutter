@@ -18,7 +18,7 @@ class LocationService {
 
   LocationService._internal();
 
-  static const String isolateName = 'LocatorIsolate';
+  static const String isolateName = "location_port";
   ReceivePort port = ReceivePort();
   bool _isRunning = false;
   int _count = -1;

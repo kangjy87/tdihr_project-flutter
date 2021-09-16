@@ -114,21 +114,17 @@ class _TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          AuthManager().googleSingIn(FCMManager().token).then(
-                (value) => {
-                  _login(value),
-                  _signining = false,
-                  if (value != GOOGLE_AUTH_RESULT.SUCCESS) {setState(() {})}
-                },
-              );
+          AuthManager().googleSingIn(FCMManager().token).then((value) => {
+                _login(value),
+                _signining = false,
+                if (value != GOOGLE_AUTH_RESULT.SUCCESS) {setState(() {})}
+              });
         } else {
-          AuthManager().googleSignOut().then(
-                (value) => {
-                  _signining = false,
-                  setState(() {}),
-                  TDIUser.clearData(),
-                },
-              );
+          AuthManager().googleSignOut().then((value) => {
+                _signining = false,
+                setState(() {}),
+                TDIUser.clearData(),
+              });
         }
       },
       style: ButtonStyle(
@@ -148,12 +144,12 @@ class _TitlePageState extends State<TitlePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              ASSETS.googleLogo,
-              height: 30,
+            Image.asset(ASSETS.googleLogo, height: 30),
+            Text(
+              TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
             ),
-            Text(TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
-                style: const TextStyle(color: Color(0xff454f63), fontSize: 15), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -218,13 +214,11 @@ class _TitlePageState extends State<TitlePage> {
 
   Widget _buildAuthenticateButton() {
     return ElevatedButton(
-      onPressed: () => LocalAuthManager().authenticate().then(
-        (value) {
-          if (value == LOCAL_AUTH_RESULT.SUCCESS) {
-            Get.toNamed(Pages.nameGroupware);
-          }
-        },
-      ),
+      onPressed: () => LocalAuthManager().authenticate().then((value) {
+        if (value == LOCAL_AUTH_RESULT.SUCCESS) {
+          Get.toNamed(Pages.nameGroupware);
+        }
+      }),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(

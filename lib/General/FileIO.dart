@@ -29,7 +29,7 @@ Future<String> readText(String filename) async {
   try {
     final file = await getFile(filename);
     return await file.readAsString();
-  } catch (e) {
+  } catch (ex) {
     return '';
   }
 }
@@ -42,7 +42,7 @@ Future<bool> deleteFile(String filename) async {
       return true;
     }
     return false;
-  } catch (e) {
+  } catch (ex) {
     return false;
   }
 }

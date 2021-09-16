@@ -58,12 +58,10 @@ class LocalAuthManager {
 
   Future<void> _checkDeviceSupported() async {
     try {
-      await _auth.isDeviceSupported().then(
-        (value) {
-          _supportState = value ? BIO_SURPPORT.SUPPORTED : BIO_SURPPORT.UNSUPPORTED;
-          return value;
-        },
-      );
+      await _auth.isDeviceSupported().then((value) {
+        _supportState = value ? BIO_SURPPORT.SUPPORTED : BIO_SURPPORT.UNSUPPORTED;
+        return value;
+      });
     } on PlatformException catch (e) {
       slog.i(e);
       _supportState = BIO_SURPPORT.UNKNOWN;
@@ -109,19 +107,17 @@ class LocalAuthManager {
         androidAuthStrings: AndroidAuthMessages(signInTitle: STRINGS.tdiGroupware, biometricHint: " "),
         // biometricOnly: true,
       )
-          .then(
-        (value) {
-          _authenticating = false;
-          slog.i("local auth/authenticated : $value");
-          return value;
-        },
-      );
-    } on PlatformException catch (e) {
-      slog.i(e);
+          .then((value) {
+        _authenticating = false;
+        slog.i("local auth/authenticated : $value");
+        return value;
+      });
+    } on PlatformException catch (ex) {
+      slog.i(ex);
       _authenticated = false;
       _authenticating = false;
       _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZE;
-      lastError = 'Error - ${e.message}';
+      lastError = 'Error - ${ex.message}';
       slog.i("local aith/result : $_authResult");
       return _authResult;
     }

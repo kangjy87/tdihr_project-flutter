@@ -124,10 +124,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   GetMaterialApp _splashScreen() {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-        fontFamily: ASSETS.font,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blueGrey, fontFamily: ASSETS.font),
       getPages: Pages.container,
       initialRoute: Pages.nameSplash,
       defaultTransition: Transition.fadeIn,
