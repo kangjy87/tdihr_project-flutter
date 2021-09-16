@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'package:geofencing/geofencing.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 
+typedef GeofenceCallback = void Function(dynamic data);
+
 class GeofenceManager {
   static final GeofenceManager _instance = GeofenceManager._internal();
 
@@ -25,10 +27,16 @@ class GeofenceManager {
     loiteringDelay: 1000 * 60,
   );
 
+  GeofenceCallback? _onEventCallback;
+
+  void buildEventCallback(GeofenceCallback event) {
+    _onEventCallback = event;
+  }
+
   Future<void> initialize() async {
     IsolateNameServer.registerPortWithName(_port.sendPort, _isolateName);
     _port.listen((dynamic data) {
-      showToastMessage('geofence event: $data');
+      _onEventCallback!(data);
       _state = data;
     });
     await GeofencingManager.initialize();

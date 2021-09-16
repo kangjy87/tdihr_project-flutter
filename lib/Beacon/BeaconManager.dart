@@ -12,9 +12,9 @@ class BeaconManager {
   }
 
   BeaconManager._internal() {
-    onBluetoothState = null;
-    onCheckAllRequriement = null;
-    onScanBeacon = null;
+    _onBluetoothState = null;
+    _onCheckAllRequriement = null;
+    _onScanBeacon = null;
   }
 
   StreamSubscription<BluetoothState>? _streamBluetooth;
@@ -28,9 +28,9 @@ class BeaconManager {
   List<Beacon> _beacons = <Beacon>[];
   bool _initScanning = false;
 
-  VoidCallback? onBluetoothState;
-  VoidCallback? onCheckAllRequriement;
-  VoidCallback? onScanBeacon;
+  VoidCallback? _onBluetoothState;
+  VoidCallback? _onCheckAllRequriement;
+  VoidCallback? _onScanBeacon;
 
   BluetoothState get bluetoothState => _bluetoothState;
   bool get isBluetooth => _bluetoothState == BluetoothState.stateOn;
@@ -46,12 +46,12 @@ class BeaconManager {
   List<Beacon> get beacons => _beacons;
 
   void buildBluetooth(VoidCallback? onBluetoothState, VoidCallback? onCheckAllRequriement) {
-    this.onBluetoothState = onBluetoothState;
-    this.onCheckAllRequriement = onCheckAllRequriement;
+    this._onBluetoothState = onBluetoothState;
+    this._onCheckAllRequriement = onCheckAllRequriement;
   }
 
   void buildBeacon(VoidCallback? onScanBeacon) {
-    this.onScanBeacon = onScanBeacon;
+    this._onScanBeacon = onScanBeacon;
   }
 
   void buildBeaconRegion(String identifier, String proximityUUID) {
@@ -61,14 +61,14 @@ class BeaconManager {
   Future<void> initialize() async {
     await _listeningBluetooth();
     await _checkAllRequirements();
-    if (onScanBeacon != null) await startScanBeacon();
+    if (_onScanBeacon != null) await startScanBeacon();
   }
 
   Future<void> _listeningBluetooth() async {
     slog.i('Listening to bluetooth state');
     _streamBluetooth = flutterBeacon.bluetoothStateChanged().listen((BluetoothState state) async {
       _bluetoothState = state;
-      onBluetoothState!();
+      _onBluetoothState!();
     });
   }
 
@@ -82,7 +82,7 @@ class BeaconManager {
     _isLocationService = await flutterBeacon.checkLocationServicesIfEnabled;
     slog.i('Location service : $_isLocationService');
 
-    onCheckAllRequriement!();
+    _onCheckAllRequriement!();
   }
 
   void changeAppLifecycleState(AppLifecycleState state) async {
@@ -122,7 +122,7 @@ class BeaconManager {
         });
         _beacons.sort(_compareParameters);
       }
-      onScanBeacon!();
+      _onScanBeacon!();
     });
   }
 
@@ -130,7 +130,7 @@ class BeaconManager {
     _streamRanging?.pause();
     if (_beacons.isNotEmpty) {
       _beacons.clear();
-      onScanBeacon!();
+      _onScanBeacon!();
     }
   }
 

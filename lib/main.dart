@@ -67,7 +67,9 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
 
     checkLocationPermission().then((value) {
       if (value == true) {
-        GeofenceManager().initialize().then((value) => null);
+        GeofenceManager()
+          ..buildEventCallback(_onGeofenceEvent)
+          ..initialize().then((value) => null);
         GeofenceManager().register("TDI", 37.4881, 127.0117, 30.0);
 
         LocationService().initialize().then((_) {
@@ -141,5 +143,9 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
         kPushLinkURL = message.data["link"];
       }
     }
+  }
+
+  void _onGeofenceEvent(dynamic data) {
+    showToastMessage('geofence event: $data');
   }
 }
