@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +14,9 @@ import 'package:hr_project_flutter/Firebase/FirebaseCore.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:hr_project_flutter/Geofence/GeofenceManager.dart';
+import 'package:hr_project_flutter/Geofence/LocationPermmision.dart';
+import 'package:hr_project_flutter/Geofence/LocationService.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
 
@@ -27,10 +31,10 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  SystemChrome.setEnabledSystemUIOverlays([
-    SystemUiOverlay.bottom,
-    SystemUiOverlay.top,
-  ]);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+  //   SystemUiOverlay.bottom,
+  //   SystemUiOverlay.top,
+  // ]);
   await FirebaseCore().initialize();
   runApp(const MainApp());
 }
@@ -60,6 +64,19 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
       ..buildRemoteMessage(_onMessage, _onMessageOpenedApp)
       ..initialize().then((value) => null);
     LocalAuthManager().initialize().then((value) => null);
+
+    checkLocationPermission().then((value) {
+      if (value == true) {
+        GeofenceManager()
+          ..buildEventCallback(_onGeofenceEvent)
+          ..initialize().then((value) => null);
+        GeofenceManager().register("TDI", 37.4881, 127.0117, 30.0);
+
+        LocationService().initialize().then((_) {
+          LocationService().start();
+        });
+      }
+    });
 
     super.initState();
   }
@@ -126,5 +143,9 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
         kPushLinkURL = message.data["link"];
       }
     }
+  }
+
+  void _onGeofenceEvent(dynamic data) {
+    showToastMessage('geofence event: $data');
   }
 }
