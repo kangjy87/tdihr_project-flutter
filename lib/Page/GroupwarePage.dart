@@ -92,14 +92,14 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
       //   slog.i("TDI Groupware is loading (progress : $progress%)");
       // },
       onPageStarted: (String url) {
-        slog.i('page started $url');
+        slog.i("page started $url");
       },
       onPageFinished: (String url) {
-        slog.i('page finished $url');
+        slog.i("page finished $url");
         kIsPushLink = false;
       },
       navigationDelegate: (NavigationRequest request) {
-        slog.i('allowing navigation to ${request.url}');
+        slog.i("allowing navigation to ${request.url}");
         _checkLogin(request.url);
         return NavigationDecision.navigate;
       },
@@ -123,14 +123,14 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
   Future<void> loadHtmlFromAssets(String filename, controller) async {
     String fileText = await rootBundle.loadString(filename);
     controller
-        .loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
+        .loadUrl(Uri.dataFromString(fileText, mimeType: "text/html", encoding: Encoding.getByName("utf-8")).toString());
   }
 
   JavascriptChannel _javascriptChannel(BuildContext context) {
     return JavascriptChannel(
-      name: '_webToAppLogout',
+      name: "_webToAppLogout",
       onMessageReceived: (JavascriptMessage message) {
-        slog.i('JavascriptChannel _webToAppLogout : ${message.message}');
+        slog.i("JavascriptChannel _webToAppLogout : ${message.message}");
         _goTitleAndLogout();
       },
     );
@@ -138,18 +138,20 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
 
   void _checkLogin(String urlString) {
     var url = Uri.parse(urlString);
-    var error = url.queryParameters['error'];
-    if (error == 'unauthenticated') {
+    var error = url.queryParameters["error"];
+    if (error == "unauthenticated") {
       _goTitleAndLogout();
       showToastMessage(MESSAGES.errLoginFailed);
     }
   }
 
   void _goTitleAndLogout() {
-    AuthManager().googleSignOut().then((value) => {
-          TDIUser.clearData(),
-          Get.toNamed(Pages.nameTitle),
-        });
+    AuthManager().googleSignOut().then(
+          (value) => {
+            TDIUser.clearData(),
+            Get.toNamed(Pages.nameTitle),
+          },
+        );
   }
 
   Future<bool> _goBack(BuildContext context) async {

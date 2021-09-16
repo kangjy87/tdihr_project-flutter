@@ -24,13 +24,15 @@ class BeaconController extends GetxController {
           isLocationService.value = BeaconManager().isLocationService;
         },
       )
-      ..buildBeacon(() {
-        if (BeaconManager().isBeaconEmpty == true) {
-          scanCount.value = 0;
-        } else {
-          scanCount.value++;
-        }
-      })
+      ..buildBeacon(
+        () {
+          if (BeaconManager().isBeaconEmpty == true) {
+            scanCount.value = 0;
+          } else {
+            scanCount.value++;
+          }
+        },
+      )
       ..buildBeaconRegion('BeaconType1', '8fef2e11-d140-2ed1-2eb1-4138edcabe09') // Beacon Device 등록
       ..buildBeaconRegion('BeaconType2', '4d9c357a-0640-11ec-9a03-0242ac130003')
       ..initialize();

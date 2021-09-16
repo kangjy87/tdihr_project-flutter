@@ -11,7 +11,7 @@ Future<String> get _localPath async {
 
 Future<File> getFile(String filename) async {
   final path = await _localPath;
-  slog.i('$path/$filename');
+  slog.i("file/ $path/$filename");
   return File('$path/$filename');
 }
 

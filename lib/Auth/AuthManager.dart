@@ -30,17 +30,12 @@ class AuthManager {
   String? _googleIDToken;
   String? _lastError;
 
-  String? get urlPhoto {
-    return _urlPhoto;
-  }
-
-  String? get googleIDToken {
-    return _googleIDToken;
-  }
+  String? get urlPhoto => _urlPhoto;
+  String? get googleIDToken => _googleIDToken;
 
   set lastError(String? value) {
     _lastError = value;
-    slog.i('Last Error : $_lastError');
+    slog.i("auth/last error : $_lastError");
   }
 
   String? get lastError {
@@ -84,8 +79,8 @@ class AuthManager {
 
         _urlPhoto = fUser.photoURL;
 
-        slog.i('User Info : ${TDIUser.account!.toJson()}');
-        slog.i('Token:' + TDIUser.token!.token);
+        slog.i("auth/user info : ${TDIUser.account!.toJson()}");
+        slog.i("auth/token:" + TDIUser.token!.token);
       } else {
         slog.e(response);
         return GOOGLE_AUTH_RESULT.ERROR_EMAIL;
@@ -108,6 +103,6 @@ class AuthManager {
     _urlPhoto = "";
     _googleIDToken = "";
 
-    slog.i("User Sign Out");
+    slog.i("auth/sign out");
   }
 }

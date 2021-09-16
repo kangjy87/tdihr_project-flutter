@@ -35,29 +35,35 @@ class GeofenceManager {
 
   Future<void> initialize() async {
     IsolateNameServer.registerPortWithName(_port.sendPort, _isolateName);
-    _port.listen((dynamic data) {
-      _onEventCallback!(data);
-      _state = data;
-    });
+    _port.listen(
+      (dynamic data) {
+        _onEventCallback!(data);
+        _state = data;
+      },
+    );
     await GeofencingManager.initialize();
   }
 
   void register(String id, double latitude, double longitude, double radius) {
     GeofencingManager.registerGeofence(
             GeofenceRegion(id, latitude, longitude, radius, _triggers, androidSettings: _settings), _eventCallback)
-        .then((_) {
-      GeofencingManager.getRegisteredGeofenceIds().then((value) {
-        _registered = value;
-      });
-    });
+        .then(
+      (_) {
+        GeofencingManager.getRegisteredGeofenceIds().then(
+          (value) {
+            _registered = value;
+          },
+        );
+      },
+    );
   }
 
   void unregister(String id) {
-    GeofencingManager.removeGeofenceById(id).then((_) {
-      GeofencingManager.getRegisteredGeofenceIds().then((value) {
-        _registered = value;
-      });
-    });
+    GeofencingManager.removeGeofenceById(id).then(
+      (_) {
+        GeofencingManager.getRegisteredGeofenceIds().then((value) => _registered = value);
+      },
+    );
   }
 
   static void _eventCallback(List<String> ids, Location l, GeofenceEvent e) async {

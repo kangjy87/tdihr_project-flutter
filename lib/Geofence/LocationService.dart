@@ -89,7 +89,7 @@ class LocationService {
   }
 
   Future<void> _onInit(Map<dynamic, dynamic> params) async {
-    slog.i("***********Init callback handler");
+    slog.i("location service/init callback handler");
     if (params.containsKey('countInit')) {
       dynamic tmpCount = params['countInit'];
       if (tmpCount is double) {
@@ -104,19 +104,19 @@ class LocationService {
     } else {
       _count = 0;
     }
-    slog.i("count:$_count, service $_isRunning");
+    slog.i("location service/count:$_count, service $_isRunning");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
   Future<void> _onDispose() async {
-    slog.i("***********Dispose callback handler [count:$_count]");
+    slog.i("location service/dispose callback handler [count:$_count]");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
   Future<void> _onEvent(LocationDto locationDto) async {
-    slog.i('$_count location in dart: ${locationDto.toString()}');
+    slog.i('location service/$_count location in dart: ${locationDto.toString()}');
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto);
     _count++;

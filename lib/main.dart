@@ -82,19 +82,23 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
     super.initState();
   }
 
-  FutureOr<Set<void>> _readTokenComplete(json) => {
-        if (json.isEmpty == false) TDIUser.token = TDIToken.formJson(jsonDecode(json)) else TDIUser.token = null,
-        setState(() {
-          TDIUser.readUserTokenJSON = TDIUser.account != null;
-        })
-      };
+  Future<void> _readTokenComplete(String json) async {
+    if (json.isEmpty == false) {
+      TDIUser.token = TDIToken.formJson(jsonDecode(json));
+    } else {
+      TDIUser.token = null;
+    }
+    setState(() => TDIUser.readUserTokenJSON = TDIUser.account != null);
+  }
 
-  FutureOr<Set<void>> _readAcountComplete(json) => {
-        if (json.isEmpty == false) TDIUser.account = TDIAccount.formJson(jsonDecode(json)) else TDIUser.account = null,
-        setState(() {
-          TDIUser.readUserJSON = TDIUser.account != null;
-        }),
-      };
+  Future<void> _readAcountComplete(String json) async {
+    if (json.isEmpty == false) {
+      TDIUser.account = TDIAccount.formJson(jsonDecode(json));
+    } else {
+      TDIUser.account = null;
+    }
+    setState(() => TDIUser.readUserJSON = TDIUser.account != null);
+  }
 
   @override
   void dispose() {
@@ -122,7 +126,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
-        fontFamily: 'TmoneyRoundWind',
+        fontFamily: ASSETS.font,
       ),
       getPages: Pages.container,
       initialRoute: Pages.nameSplash,
@@ -132,10 +136,12 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   }
 
   void _onMessage(RemoteMessage message) {
+    slog.i("message: ${message.notification!.title!}/${message.notification!.body!}");
     showSnackBar(message.notification!.title!, message.notification!.body!);
   }
 
   void _onMessageOpenedApp(RemoteMessage message) {
+    slog.i("message: ${message.notification!.title!}/${message.notification!.body!}");
     // showSnackBar(message.notification!.title!, message.notification!.body!);
     kIsPushLink = false;
     if (message.data.isNotEmpty == true) {
@@ -147,7 +153,7 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   }
 
   void _onGeofenceEvent(dynamic data) {
-    slog.i('geofence event: $data');
-    showToastMessage('geofence event: $data');
+    slog.i("geofence event: $data");
+    showToastMessage("geofence event: $data");
   }
 }
