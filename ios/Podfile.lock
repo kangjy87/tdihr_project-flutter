@@ -4,6 +4,8 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
+  - background_locator (0.0.1):
+    - Flutter
   - Firebase/Auth (8.5.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 8.5.0)
@@ -50,9 +52,13 @@ PODS:
     - GoogleUtilities/Reachability (~> 7.4)
     - GoogleUtilities/UserDefaults (~> 7.4)
   - Flutter (1.0.0)
+  - flutter_beacon (0.3.0):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
+  - geofencing (0.0.1):
+    - Flutter
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
@@ -87,6 +93,8 @@ PODS:
   - GTMSessionFetcher/Core (1.6.1)
   - local_auth_device_credentials (0.0.1):
     - Flutter
+  - "location_permissions (3.0.0+1)":
+    - Flutter
   - nanopb (2.30908.0):
     - nanopb/decode (= 2.30908.0)
     - nanopb/encode (= 2.30908.0)
@@ -102,13 +110,17 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - background_locator (from `.symlinks/plugins/background_locator/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_beacon (from `.symlinks/plugins/flutter_beacon/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - geofencing (from `.symlinks/plugins/geofencing/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - local_auth_device_credentials (from `.symlinks/plugins/local_auth_device_credentials/ios`)
+  - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
@@ -132,6 +144,8 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
+  background_locator:
+    :path: ".symlinks/plugins/background_locator/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -140,12 +154,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_beacon:
+    :path: ".symlinks/plugins/flutter_beacon/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  geofencing:
+    :path: ".symlinks/plugins/geofencing/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   local_auth_device_credentials:
     :path: ".symlinks/plugins/local_auth_device_credentials/ios"
+  location_permissions:
+    :path: ".symlinks/plugins/location_permissions/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -155,6 +175,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  background_locator: d8daad218f2282920654de8a649b430d75c218d9
   Firebase: ff8c73105b90e33e1dc6c8e5445d7adc2ccdc7c1
   firebase_auth: 214ff86facd807bbb0ccff32f4b2d3865e3bc4f3
   firebase_core: 82d486a6231b636aea229bd471bceca82cbe00a6
@@ -165,7 +186,9 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 0ede6ffcd215b8f93c19d9b06c1c54e2d4107e98
   FirebaseMessaging: 0705ec705c21705efc51c071fba924c8e25c63e7
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_beacon: 2525df9d96b904623f325968a73bac805e648119
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
+  geofencing: 98674d4c10508e8bbf7678623d48c2a4172559ee
   google_sign_in: 952c378b33dc5a0bf4bcb2d12afe9ac70b3239fb
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
@@ -173,6 +196,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   local_auth_device_credentials: 7ea08f7e3a5cd32bd628d1f8ee60e22f9d78f668
+  location_permissions: 7e0f9aa0f60deb8ff93ddf0e2a164c7e8197bc94
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c

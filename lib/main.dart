@@ -31,10 +31,10 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-    SystemUiOverlay.bottom,
-    SystemUiOverlay.top,
-  ]);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+  //   SystemUiOverlay.bottom,
+  //   SystemUiOverlay.top,
+  // ]);
   await FirebaseCore().initialize();
   runApp(const MainApp());
 }
