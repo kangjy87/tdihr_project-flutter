@@ -1,0 +1,15 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+<head>
+<title>Flutter WebView javascript</title>
+<script>
+	function webToAppLogout(msg) {
+		//alert(msg);
+		try { _webToAppLogout.postMessage(msg); } catch (err) {}
+	}
+</script>
+</head>
+<body>
+	<button id="btnWebToAppLogout" onclick="webToAppLogout('logout')">Logout</button>
+</body>
+</html>
