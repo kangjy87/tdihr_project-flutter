@@ -50,7 +50,7 @@ class LocationService {
   }
 
   Future<void> _startLocator() async {
-    Map<String, dynamic> data = {'countInit': 1};
+    Map<String, dynamic> data = {"countInit": 1};
     return await BackgroundLocator.registerLocationUpdate(
       _eventCallback,
       initCallback: _initCallback,
@@ -90,8 +90,8 @@ class LocationService {
 
   Future<void> _onInit(Map<dynamic, dynamic> params) async {
     slog.i("location service/init callback handler");
-    if (params.containsKey('countInit')) {
-      dynamic tmpCount = params['countInit'];
+    if (params.containsKey("countInit")) {
+      dynamic tmpCount = params["countInit"];
       if (tmpCount is double) {
         _count = tmpCount.toInt();
       } else if (tmpCount is String) {
@@ -116,7 +116,7 @@ class LocationService {
   }
 
   Future<void> _onEvent(LocationDto locationDto) async {
-    slog.i('location service/$_count location in dart: ${locationDto.toString()}');
+    slog.i("location service/$_count location in dart: ${locationDto.toString()}");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto);
     _count++;
