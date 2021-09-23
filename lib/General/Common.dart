@@ -32,6 +32,7 @@ class ASSETS {
   static String lottieSplash = "assets/splash.json";
   static String tdiLogo = "assets/tdi_img.png";
   static String googleLogo = "assets/google.png";
+  static String font = "TmoneyRoundWind";
 }
 
 class URL {

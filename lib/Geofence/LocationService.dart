@@ -18,7 +18,7 @@ class LocationService {
 
   LocationService._internal();
 
-  static const String isolateName = 'LocatorIsolate';
+  static const String isolateName = "location_port";
   ReceivePort port = ReceivePort();
   bool _isRunning = false;
   int _count = -1;
@@ -50,7 +50,7 @@ class LocationService {
   }
 
   Future<void> _startLocator() async {
-    Map<String, dynamic> data = {'countInit': 1};
+    Map<String, dynamic> data = {"countInit": 1};
     return await BackgroundLocator.registerLocationUpdate(
       _eventCallback,
       initCallback: _initCallback,
@@ -89,9 +89,9 @@ class LocationService {
   }
 
   Future<void> _onInit(Map<dynamic, dynamic> params) async {
-    slog.i("***********Init callback handler");
-    if (params.containsKey('countInit')) {
-      dynamic tmpCount = params['countInit'];
+    slog.i("location service/init callback handler");
+    if (params.containsKey("countInit")) {
+      dynamic tmpCount = params["countInit"];
       if (tmpCount is double) {
         _count = tmpCount.toInt();
       } else if (tmpCount is String) {
@@ -104,19 +104,19 @@ class LocationService {
     } else {
       _count = 0;
     }
-    slog.i("count:$_count, service $_isRunning");
+    slog.i("location service/count:$_count, service $_isRunning");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
   Future<void> _onDispose() async {
-    slog.i("***********Dispose callback handler [count:$_count]");
+    slog.i("location service/dispose callback handler [count:$_count]");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(null);
   }
 
   Future<void> _onEvent(LocationDto locationDto) async {
-    slog.i('$_count location in dart: ${locationDto.toString()}');
+    slog.i("location service/$_count location in dart: ${locationDto.toString()}");
     final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
     send?.send(locationDto);
     _count++;

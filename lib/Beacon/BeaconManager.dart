@@ -61,12 +61,14 @@ class BeaconManager {
   Future<void> initialize() async {
     await _listeningBluetooth();
     await _checkAllRequirements();
-    if (_onScanBeacon != null) await startScanBeacon();
+    if (_onScanBeacon != null) {
+      await startScanBeacon();
+    }
   }
 
   Future<void> _listeningBluetooth() async {
-    slog.i('Listening to bluetooth state');
     _streamBluetooth = flutterBeacon.bluetoothStateChanged().listen((BluetoothState state) async {
+      slog.i("beacon/bluetooth : $state");
       _bluetoothState = state;
       _onBluetoothState!();
     });
@@ -74,19 +76,18 @@ class BeaconManager {
 
   Future<void> _checkAllRequirements() async {
     _bluetoothState = await flutterBeacon.bluetoothState;
-    slog.i('Bluetooth : $_bluetoothState');
-
     _authorizationStatus = await flutterBeacon.authorizationStatus;
-    slog.i('Authorization : $_authorizationStatus');
-
     _isLocationService = await flutterBeacon.checkLocationServicesIfEnabled;
-    slog.i('Location service : $_isLocationService');
+
+    slog.i("beacon/bluetooth  : $_bluetoothState");
+    slog.i("beacon/authorization : $_authorizationStatus");
+    slog.i("beacon/location service : $_isLocationService");
 
     _onCheckAllRequriement!();
   }
 
   void changeAppLifecycleState(AppLifecycleState state) async {
-    slog.i('App lifecycle state : $state');
+    slog.i("beacon/app lifecycle state : $state");
     if (state == AppLifecycleState.resumed) {
       if (_streamBluetooth != null) {
         if (_streamBluetooth!.isPaused) {
@@ -110,7 +111,7 @@ class BeaconManager {
     }
 
     _streamRanging = flutterBeacon.ranging(_regions).listen((RangingResult result) async {
-      slog.i('Beacon ranging : $result');
+      slog.i("beacon/ranging : $result");
 
       await _checkAllRequirements();
 

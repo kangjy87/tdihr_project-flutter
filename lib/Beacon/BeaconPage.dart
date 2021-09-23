@@ -14,27 +14,21 @@ class BeaconPage extends GetView<BeaconController> {
     slog.i("Flutter Sample : Beacon");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beacon'),
+        title: Text("Beacon"),
         actions: <Widget>[
           Obx(_buildAuthorizedIcon),
-          Obx(() {
-            return _buildLocationIcon(context);
-          }),
-          Obx(() {
-            return _buildBluetoothIcon(context);
-          }),
+          Obx(() => _buildLocationIcon(context)),
+          Obx(() => _buildBluetoothIcon(context)),
         ],
       ),
-      body: Obx(() {
-        return _buildBodyList(context);
-      }),
+      body: Obx(() => _buildBodyList(context)),
     );
   }
 
   Widget _buildAuthorizedIcon() {
     if (controller.isLocationService.value == false)
       return IconButton(
-        tooltip: 'Not Determined',
+        tooltip: "Not Determined",
         icon: Icon(Icons.portable_wifi_off),
         color: Colors.grey,
         onPressed: () {},
@@ -42,37 +36,27 @@ class BeaconPage extends GetView<BeaconController> {
 
     if (controller.isAuthorization.value == false)
       return IconButton(
-        tooltip: 'Not Authorized',
+        tooltip: "Not Authorized",
         icon: Icon(Icons.portable_wifi_off),
         color: Colors.red,
-        onPressed: () async {
-          await flutterBeacon.requestAuthorization;
-        },
+        onPressed: () async => await flutterBeacon.requestAuthorization,
       );
 
     return IconButton(
-      tooltip: 'Authorized',
+      tooltip: "Authorized",
       icon: Icon(Icons.wifi_tethering),
       color: Colors.lightBlueAccent,
-      onPressed: () async {
-        await flutterBeacon.requestAuthorization;
-      },
+      onPressed: () async => await flutterBeacon.requestAuthorization,
     );
   }
 
   Widget _buildLocationIcon(BuildContext context) {
     final service = controller.isLocationService.value;
     return IconButton(
-      tooltip: service ? 'Location Service ON' : 'Location Service OFF',
-      icon: Icon(
-        service ? Icons.location_on : Icons.location_off,
-      ),
+      tooltip: service ? "Location Service ON" : "Location Service OFF",
+      icon: Icon(service ? Icons.location_on : Icons.location_off),
       color: service ? Colors.lightBlueAccent : Colors.red,
-      onPressed: service
-          ? () {}
-          : () {
-              _handleOpenLocationSettings(context);
-            },
+      onPressed: service ? () {} : () => _handleOpenLocationSettings(context),
     );
   }
 
@@ -80,7 +64,7 @@ class BeaconPage extends GetView<BeaconController> {
     final state = controller.bluetoothState.value;
     if (state == BluetoothState.stateOn) {
       return IconButton(
-        tooltip: 'Bluetooth ON',
+        tooltip: "Bluetooth ON",
         icon: Icon(Icons.bluetooth_connected),
         color: Colors.lightBlueAccent,
         onPressed: () {},
@@ -88,17 +72,15 @@ class BeaconPage extends GetView<BeaconController> {
     }
     if (state == BluetoothState.stateOff) {
       return IconButton(
-        tooltip: 'Bluetooth OFF',
+        tooltip: "Bluetooth OFF",
         icon: Icon(Icons.bluetooth),
         color: Colors.grey,
-        onPressed: () {
-          _handleOpenBluetooth(context);
-        },
+        onPressed: () => _handleOpenBluetooth(context),
       );
     }
 
     return IconButton(
-      tooltip: 'Bluetooth State Unknown',
+      tooltip: "Bluetooth State Unknown",
       icon: Icon(Icons.bluetooth_disabled),
       color: Colors.red,
       onPressed: () {},
@@ -110,40 +92,31 @@ class BeaconPage extends GetView<BeaconController> {
         ? Center(child: CircularProgressIndicator())
         : ListView(
             children: ListTile.divideTiles(
-              context: context,
-              tiles: BeaconManager().beacons.map(
-                (beacon) {
+                context: context,
+                tiles: BeaconManager().beacons.map((beacon) {
                   return ListTile(
-                    title: Text(
-                      beacon.proximityUUID,
-                      style: TextStyle(fontSize: 15.0),
-                    ),
+                    title: Text(beacon.proximityUUID, style: TextStyle(fontSize: 15.0)),
                     subtitle: new Row(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            'Major: ${beacon.major}\nMinor: ${beacon.minor}',
+                            "Major: ${beacon.major}\nMinor: ${beacon.minor}",
                             style: TextStyle(fontSize: 13.0),
                           ),
                           flex: 1,
                           fit: FlexFit.tight,
                         ),
                         Flexible(
-                          child: Text(
-                            'Accuracy: ${beacon.accuracy}m\nRSSI: ${beacon.rssi}',
-                            style: TextStyle(fontSize: 13.0),
-                          ),
+                          child: Text("Accuracy: ${beacon.accuracy}m\nRSSI: ${beacon.rssi}",
+                              style: TextStyle(fontSize: 13.0)),
                           flex: 2,
                           fit: FlexFit.tight,
                         )
                       ],
                     ),
                   );
-                },
-              ),
-            ).toList(),
-          );
+                })).toList());
   }
 
   void _handleOpenLocationSettings(BuildContext context) async {
@@ -151,22 +124,19 @@ class BeaconPage extends GetView<BeaconController> {
       await flutterBeacon.openLocationSettings;
     } else if (Platform.isIOS) {
       await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('위치 서비스 활성화'),
-            content: Text(
-              '위치 서비스를 활성화해주세요.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("위치 서비스 활성화"),
+              content: Text("위치 서비스를 활성화해주세요."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -174,25 +144,24 @@ class BeaconPage extends GetView<BeaconController> {
     if (Platform.isAndroid) {
       try {
         await flutterBeacon.openBluetoothSettings;
-      } on PlatformException catch (e) {
-        slog.i(e);
+      } on PlatformException catch (ex) {
+        slog.i(ex);
       }
     } else if (Platform.isIOS) {
       await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('블루투스 활성화'),
-            content: Text('블루투스를 활성화해주세요.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("블루투스 활성화"),
+              content: Text("블루투스를 활성화해주세요."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          });
     }
   }
 }

@@ -32,7 +32,7 @@ class LocalAuthManager {
   bool _authenticated = false;
   bool _authenticating = false;
   LOCAL_AUTH_RESULT _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZE;
-  String? _lastError = '';
+  String? _lastError = "";
 
   BIO_SURPPORT get supportState => _supportState;
   LOCAL_AUTH_RESULT get authResult => _authResult;
@@ -41,7 +41,7 @@ class LocalAuthManager {
 
   set lastError(String? value) {
     _lastError = value;
-    slog.i('Last Error : $_lastError');
+    slog.i("local auth/last error : $_lastError");
   }
 
   String? get lastError {
@@ -65,10 +65,10 @@ class LocalAuthManager {
     } on PlatformException catch (e) {
       slog.i(e);
       _supportState = BIO_SURPPORT.UNKNOWN;
-      lastError = 'Error - ${e.message}';
+      lastError = "Error - ${e.message}";
     }
 
-    slog.i('Support State $_supportState');
+    slog.i("local auth/support state $_supportState");
   }
 
   Future<void> _checkBiometrics() async {
@@ -77,10 +77,10 @@ class LocalAuthManager {
     } on PlatformException catch (e) {
       slog.i(e);
       _canCheckBiometrics = false;
-      lastError = 'Error - ${e.message}';
+      lastError = "Error - ${e.message}";
     }
 
-    slog.i('Can Biometrics $_canCheckBiometrics');
+    slog.i("local auth/can biometrics $_canCheckBiometrics");
   }
 
   Future<void> _checkAvailableBiometrics() async {
@@ -89,12 +89,10 @@ class LocalAuthManager {
     } on PlatformException catch (e) {
       slog.i(e);
       _availableBiometics = <BiometricType>[];
-      lastError = 'Error - ${e.message}';
+      lastError = "Error - ${e.message}";
     }
 
-    _availableBiometics!.forEach((element) {
-      slog.i('Available Biometic ${element.toString()}');
-    });
+    _availableBiometics!.forEach((element) => slog.i("local auth/available biometic ${element.toString()}"));
   }
 
   Future<LOCAL_AUTH_RESULT> authenticate() async {
@@ -106,26 +104,26 @@ class LocalAuthManager {
         useErrorDialogs: true,
         stickyAuth: true,
         sensitiveTransaction: true,
-        androidAuthStrings: AndroidAuthMessages(signInTitle: STRINGS.tdiGroupware, biometricHint: ' '),
+        androidAuthStrings: AndroidAuthMessages(signInTitle: STRINGS.tdiGroupware, biometricHint: " "),
         // biometricOnly: true,
       )
           .then((value) {
         _authenticating = false;
-        slog.i('Authenticated : $value');
+        slog.i("local auth/authenticated : $value");
         return value;
       });
-    } on PlatformException catch (e) {
-      slog.i(e);
+    } on PlatformException catch (ex) {
+      slog.i(ex);
       _authenticated = false;
       _authenticating = false;
       _authResult = LOCAL_AUTH_RESULT.NO_AUTHORIZE;
-      lastError = 'Error - ${e.message}';
-      slog.i('Auth Result : $_authResult');
+      lastError = 'Error - ${ex.message}';
+      slog.i("local aith/result : $_authResult");
       return _authResult;
     }
 
     _authResult = _authenticated ? LOCAL_AUTH_RESULT.SUCCESS : LOCAL_AUTH_RESULT.FAILED;
-    slog.i('Auth Result : $_authResult');
+    slog.i("local aith/result : $_authResult");
     return _authResult;
   }
 

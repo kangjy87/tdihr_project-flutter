@@ -18,9 +18,6 @@ class _TitlePageState extends State<TitlePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('TDI - Sign in with Google'),
-      // ),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -36,7 +33,7 @@ class _TitlePageState extends State<TitlePage> {
             Expanded(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: Text('ver. $kAppVersion'),
+                child: Text("ver. $kAppVersion"),
               ),
             ),
           ],
@@ -117,8 +114,11 @@ class _TitlePageState extends State<TitlePage> {
         if (TDIUser.isAleadyLogin == false) {
           _signining = true;
           setState(() {});
-          AuthManager().googleSingIn(FCMManager().token).then(
-              (value) => {_login(value), _signining = false, if (value != GOOGLE_AUTH_RESULT.SUCCESS) setState(() {})});
+          AuthManager().googleSingIn(FCMManager().token).then((value) => {
+                _login(value),
+                _signining = false,
+                if (value != GOOGLE_AUTH_RESULT.SUCCESS) {setState(() {})}
+              });
         } else {
           AuthManager().googleSignOut().then((value) => {
                 _signining = false,
@@ -128,13 +128,14 @@ class _TitlePageState extends State<TitlePage> {
         }
       },
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-            ),
-          )),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+          ),
+        ),
+      ),
       child: Container(
         width: 300,
         height: 30,
@@ -143,12 +144,12 @@ class _TitlePageState extends State<TitlePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset(
-              ASSETS.googleLogo,
-              height: 30,
+            Image.asset(ASSETS.googleLogo, height: 30),
+            Text(
+              TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
+              style: const TextStyle(color: Color(0xff454f63), fontSize: 15),
+              textAlign: TextAlign.center,
             ),
-            Text(TDIUser.account == null ? STRINGS.googleLogin : TDIUser.account!.name + " " + STRINGS.logout,
-                style: const TextStyle(color: Color(0xff454f63), fontSize: 15), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -184,13 +185,14 @@ class _TitlePageState extends State<TitlePage> {
     return ElevatedButton(
       onPressed: () => Get.toNamed(Pages.nameGroupware),
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-              side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
-            ),
-          )),
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side: BorderSide(color: const Color(0xffe8e8e8), width: 3),
+          ),
+        ),
+      ),
       child: Container(
         width: 300,
         height: 30,

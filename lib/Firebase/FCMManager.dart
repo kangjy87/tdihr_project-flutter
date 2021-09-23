@@ -38,18 +38,19 @@ class FCMManager {
 
   Future<void> _checkPermission() async {
     // _notificationSettings = await _firebaseMessaging
-    await _firebaseMessaging.requestPermission(announcement: true, carPlay: true, criticalAlert: true).then((value) {
-      slog.i('alert : ${value.alert}');
-      slog.i('announcement : ${value.announcement}');
-      slog.i('carPlay : ${value.carPlay}');
-      return value;
-    });
+    await _firebaseMessaging.requestPermission(announcement: true, carPlay: true, criticalAlert: true).then(
+      (value) {
+        slog.i("fcm/alert : ${value.alert}");
+        slog.i("fcm/announcement : ${value.announcement}");
+        slog.i("fcm/carPlay : ${value.carPlay}");
+        return value;
+      },
+    );
   }
 
   Future<void> _getToken() async {
     await _firebaseMessaging.getToken().then((value) {
-      // slog.i('FCM Token : $value');
-      print('FCM Token : $value');
+      slog.i("fcm/token : $value");
       _token = value!;
     });
   }

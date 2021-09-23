@@ -6,10 +6,10 @@ import 'package:hr_project_flutter/Page/GroupwarePage.dart';
 import 'package:hr_project_flutter/Page/TitlePage.dart';
 
 class Pages {
-  static String nameSplash = '/splash';
-  static String nameTitle = '/title';
-  static String nameGroupware = '/groupware';
-  static String nameBeacon = '/beacon';
+  static String nameSplash = "/splash";
+  static String nameTitle = "/title";
+  static String nameGroupware = "/groupware";
+  static String nameBeacon = "/beacon";
 
   static List<GetPage> get container => [
         GetPage(
