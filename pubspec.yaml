@@ -37,8 +37,12 @@ dependencies:
   path_provider: ^2.0.3
   package_info: ^2.0.2
   local_auth_device_credentials: ^1.0.0
+
+  # permission
   location_permissions: ^4.0.0
+  # beacon
   flutter_beacon: ^0.5.1
+  # geofence
   geofencing: ^0.1.0
   background_locator: ^1.6.6
 
