@@ -47,13 +47,7 @@
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UIRequiredDeviceCapabilities</key>
-		<array>
-			<string>location-services</string>
-			<string>gps</string>
-			<string>armv7</string>
-		</array>
+		<string>Main</string>		
 		<key>UIBackgroundModes</key>
 		<array>
 			<string>location</string>
@@ -75,13 +69,21 @@
 		<false/>
 		<key>io.flutter.embedded_views_preview</key>
 		<true/>
-		<key>NSLocationWhenInUseUsageDescription</key>
+		<!-- todo : beacon/ geofence -->
+		<!-- <key>NSLocationWhenInUseUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
 		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>블루투스를 켜주세요.</string>
+		<string>블루투스를 켜주세요.</string> -->
+		<!-- todo: geofence -->
+		<!-- <key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>location-services</string>
+			<string>gps</string>
+			<string>armv7</string>
+		</array> -->
 	</dict>
 </plist>

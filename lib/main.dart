@@ -8,18 +8,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/Auth/LocalAuthManager.dart';
-import 'package:hr_project_flutter/Beacon/BeaconManager.dart';
+// import 'package:hr_project_flutter/Beacon/BeaconManager.dart'; todo:beacon
 import 'package:hr_project_flutter/Firebase/FCMManager.dart';
 import 'package:hr_project_flutter/Firebase/FirebaseCore.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/FileIO.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
-import 'package:hr_project_flutter/Geofence/GeofenceManager.dart';
-import 'package:hr_project_flutter/Geofence/LocationPermmision.dart';
-import 'package:hr_project_flutter/Geofence/LocationService.dart';
+// import 'package:hr_project_flutter/Geofence/GeofenceManager.dart'; todo: geofence
+// import 'package:hr_project_flutter/Geofence/LocationPermmision.dart';
+// import 'package:hr_project_flutter/Geofence/LocationService.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
+
+// apk 빌드시 command : flutter build apk --no-sound-null-safety
 
 void main() async {
   if (kReleaseMode == true) {
@@ -66,18 +68,19 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
       ..initialize().then((value) => null);
     LocalAuthManager().initialize().then((value) => null);
 
-    checkLocationPermission().then((value) {
-      if (value == true) {
-        GeofenceManager()
-          ..buildEventCallback(_onGeofenceEvent)
-          ..initialize().then((value) => null);
-        GeofenceManager().register("TDI", 37.4881, 127.0117, 30.0);
+    // todo: geofence
+    // checkLocationPermission().then((value) {
+    //   if (value == true) {
+    //     GeofenceManager()
+    //       ..buildEventCallback(_onGeofenceEvent)
+    //       ..initialize().then((value) => null);
+    //     GeofenceManager().register("TDI", 37.4881, 127.0117, 30.0);
 
-        LocationService().initialize().then((_) {
-          LocationService().start();
-        });
-      }
-    });
+    //     LocationService().initialize().then((_) {
+    //       LocationService().start();
+    //     });
+    //   }
+    // });
 
     super.initState();
   }
@@ -107,17 +110,18 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
   }
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    var cur = Get.currentRoute;
-    if (cur == Pages.nameBeacon) {
-      BeaconManager().changeAppLifecycleState(state);
-    }
-    if (kIsPushLink == true) {
-      if (state == AppLifecycleState.resumed) {
-        if (cur != Pages.nameGroupware) {
-          Get.toNamed(Pages.nameGroupware);
-        }
-      }
-    }
+    // todo: beacon
+    // var cur = Get.currentRoute;
+    // if (cur == Pages.nameBeacon) {
+    //   BeaconManager().changeAppLifecycleState(state);
+    // }
+    // if (kIsPushLink == true) {
+    //   if (state == AppLifecycleState.resumed) {
+    //     if (cur != Pages.nameGroupware) {
+    //       Get.toNamed(Pages.nameGroupware);
+    //     }
+    //   }
+    // }
     super.didChangeAppLifecycleState(state);
   }
 
@@ -149,8 +153,9 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin, Widget
     }
   }
 
-  void _onGeofenceEvent(dynamic data) {
-    slog.i("geofence event: $data");
-    showToastMessage("geofence event: $data");
-  }
+  //  todo: geofence
+  // void _onGeofenceEvent(dynamic data) {
+  //   slog.i("geofence event: $data");
+  //   showToastMessage("geofence event: $data");
+  // }
 }

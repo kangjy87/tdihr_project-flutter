@@ -96,7 +96,8 @@ class _TitlePageState extends State<TitlePage> {
       }
     }
 
-    widgets.add(_buildBeaconButton());
+    // todo: beacon
+    // widgets.add(_buildBeaconButton());
 
     return widgets;
   }
