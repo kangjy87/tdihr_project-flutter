@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "153404377469-2japr049ukdp4teo4uom8v7kerkmv2cn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tdi.groupware",
+            "certificate_hash": "2f4da8fcb11375978d2ea28932eea670d2ff1912"
+          }
+        },
+        {
           "client_id": "153404377469-49uohamue9g645nkt4cdiem0gvrr3b48.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -39,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "153404377469-tb6a8uk0ll94upenj4a5cskimeh4jfmb.apps.googleusercontent.com",
+              "client_id": "153404377469-8hipkl5cqd6magt8pl3qnnjev1mgkug2.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tdi.groupware"
+                "bundle_id": "com.tdihr.groupware"
               }
             }
           ]

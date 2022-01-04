@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
+import 'package:hr_project_flutter/retrofit/beacon_login_dto.dart';
 
 class BeaconManager {
   static final BeaconManager _instance = BeaconManager._internal();
@@ -26,12 +28,12 @@ class BeaconManager {
   List<Region> _regions = <Region>[];
   Map<Region, List<Beacon>> _regionBeacons = <Region, List<Beacon>>{};
   List<Beacon> _beacons = <Beacon>[];
+  List<BeaconData> _beaconDatas = <BeaconData>[];
   bool _initScanning = false;
 
   VoidCallback? _onBluetoothState;
   VoidCallback? _onCheckAllRequriement;
   VoidCallback? _onScanBeacon;
-
   BluetoothState get bluetoothState => _bluetoothState;
   bool get isBluetooth => _bluetoothState == BluetoothState.stateOn;
   AuthorizationStatus get authorizationStatus => _authorizationStatus;
@@ -44,6 +46,8 @@ class BeaconManager {
   bool get canScanning => isBluetooth == true && isAuthorization == true && isLocationService == true;
   bool get isBeaconEmpty => _beacons.isEmpty;
   List<Beacon> get beacons => _beacons;
+  List<BeaconData> get beaconDatas => _beaconDatas;
+  // var beaconList = RxList<BeaconData>([]).obs ;
 
   void buildBluetooth(VoidCallback? onBluetoothState, VoidCallback? onCheckAllRequriement) {
     this._onBluetoothState = onBluetoothState;
@@ -62,6 +66,7 @@ class BeaconManager {
     await _listeningBluetooth();
     await _checkAllRequirements();
     if (_onScanBeacon != null) {
+      print('>>>>>>!!!!${_onScanBeacon}');
       await startScanBeacon();
     }
   }
@@ -99,7 +104,6 @@ class BeaconManager {
       _streamBluetooth?.pause();
     }
   }
-
   Future<void> startScanBeacon() async {
     _initScanning = await flutterBeacon.initializeScanning;
 
@@ -109,17 +113,33 @@ class BeaconManager {
         return;
       }
     }
-
+    bool beaconScanningTime = false ;
     _streamRanging = flutterBeacon.ranging(_regions).listen((RangingResult result) async {
       slog.i("beacon/ranging : $result");
-
+      if(!beaconScanningTime){
+        beaconScanningTime = true ;
+        print('?????>>>>>>> 응 들어옴');
+        Timer.periodic(Duration(seconds: 4), (timer) {
+          print('?????>>>>>>> 응 4초됨 나가');
+          timer.cancel();
+        });
+        // await Future.delayed(Duration (seconds: 4));
+      }
       await _checkAllRequirements();
 
       _regionBeacons[result.region] = result.beacons;
       _beacons.clear();
+      _beaconDatas.clear();
       if (canScanning == true) {
         _regionBeacons.values.forEach((list) {
           _beacons.addAll(list);
+          for(Beacon b in list){
+            BeaconData data = BeaconData();
+            data.uuid = b.proximityUUID ;
+            data.rssi = b.rssi ;
+            _beaconDatas.add(data);
+          }
+
         });
         _beacons.sort(_compareParameters);
       }
@@ -131,6 +151,7 @@ class BeaconManager {
     _streamRanging?.pause();
     if (_beacons.isNotEmpty) {
       _beacons.clear();
+      _beaconDatas.clear();
       _onScanBeacon!();
     }
   }

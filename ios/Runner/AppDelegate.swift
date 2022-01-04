@@ -1,6 +1,5 @@
 import UIKit
 import Flutter
-import background_locator
 
 func registerPlugins(registry: FlutterPluginRegistry) -> () {
     if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
@@ -15,8 +14,6 @@ func registerPlugins(registry: FlutterPluginRegistry) -> () {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    GeofencingPlugin.setPluginRegistrantCallback { (registry) in GeneratedPluginRegistrant.register(with: registry) }
-	  BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

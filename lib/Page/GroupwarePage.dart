@@ -4,12 +4,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/Auth/AuthManager.dart';
+import 'package:hr_project_flutter/BLE/BleManager.dart';
+import 'package:hr_project_flutter/BLE/inOutWorkAndroidDialog.dart';
+import 'package:hr_project_flutter/BLE/in_out_work.dart';
+import 'package:hr_project_flutter/Beacon/InOutWorkIosDialog.dart';
+import 'package:hr_project_flutter/Beacon/inOutWorkDialog.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
+import 'package:hr_project_flutter/Page/GroupwareControler.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
+import 'package:hr_project_flutter/retrofit/beacon_login_dto.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class GroupwarePage extends StatefulWidget {
@@ -23,6 +32,9 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
 
   @override
   void initState() {
+    slog.i("TDI Groupware Start ...${TDIUser.token!.token}");
+    GroupwareControler groupwareControler = Get.find<GroupwareControler>();
+    groupwareControler.getbeaconList();
     WidgetsBinding.instance!.addObserver(this);
     if (Platform.isAndroid) {
       WebView.platform = SurfaceAndroidWebView();
@@ -62,7 +74,7 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
           child: _buildWebView(),
         ),
       ),
-      floatingActionButton: _buildFloatingActionButtonOnyIOS(),
+      // floatingActionButton: _buildFloatingActionButtonOnyIOS(),
     );
   }
 
@@ -86,8 +98,20 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
       javascriptMode: JavascriptMode.unrestricted,
       gestureNavigationEnabled: true,
       javascriptChannels: <JavascriptChannel>{
-        _javascriptChannel(context),
+          _javascriptLogoutChannel(context),
+          _javascriptInWorkChannel(context),
+          _javascriptOutWorkChannel(context),
       },
+      // javascriptChannels: Set.from([
+      //   _javascriptLogoutChannel(context),
+      //   _javascriptInWorkChannel(context),
+      //   _javascriptOutWorkChannel(context),
+      // ]),
+      // javascriptChannels: <JavascriptChannel>{
+      //   _javascriptLogoutChannel(context),
+      //   // _javascriptInWorkChannel(context),
+      //   // _javascriptOutWorkChannel(context),
+      // },
       // onProgress: (int progress) {
       //   slog.i("TDI Groupware is loading (progress : $progress%)");
       // },
@@ -126,7 +150,7 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
         .loadUrl(Uri.dataFromString(fileText, mimeType: "text/html", encoding: Encoding.getByName("utf-8")).toString());
   }
 
-  JavascriptChannel _javascriptChannel(BuildContext context) {
+  JavascriptChannel _javascriptLogoutChannel(BuildContext context) {
     return JavascriptChannel(
       name: "_webToAppLogout",
       onMessageReceived: (JavascriptMessage message) {
@@ -135,7 +159,188 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
       },
     );
   }
+  JavascriptChannel _javascriptInWorkChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: "_webToAppInWork",
+      onMessageReceived: (JavascriptMessage message)async{
+        String strInOut = "in" ;
+        checkLocationServices(strInOut,(){
+          GroupwareControler groupwareControler = Get.find<GroupwareControler>();
+          groupwareControler.strCommute.value = strInOut ;
+          if(Platform.isIOS){
+            inAndOutWorkshowDialog_ios(context);
+            inAndOutWorkScanns_ios((List<BeaconData> beaconList){
+              groupwareControler.beaconList.value.addAll(beaconList);
+              print("${beaconList.length}라스트 결과물>>>>>>>>${groupwareControler.beaconList.value.length}");
+              groupwareControler.serverSend((type,result,code){
+                print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+                _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+              });
+            });
+            // inAndOutWorkDialog(context,(List<BeaconData> beaconList){
+            //   groupwareControler.beaconList.value.addAll(beaconList);
+            //   print("${beaconList.length}라스트 결과물>>>>>>>>${groupwareControler.beaconList.value.length}");
+            //   groupwareControler.serverSend((type,result,code){
+            //     print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+            //     _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+            //   });
+            // });
+          }else{
+            inAndOutWorkshowDialog_android(context);
+            inAndOutWorkScanns_android((){
+              //groupwareControler.beaconList
+              for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+                print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+              }
+              groupwareControler.serverSend((type,result,code){
+                print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+                _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+              });
+            });
+            // inAndOutWork(context,(){
+            //   //groupwareControler.beaconList
+            //   for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+            //     print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+            //   }
+            //   groupwareControler.serverSend((type,result,code){
+            //     print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+            //     _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+            //   });
+            // });
+          }
+        });
+      },
+    );
+  }
+  JavascriptChannel _javascriptOutWorkChannel(BuildContext context) {
+    return JavascriptChannel(
+      name: "_webToAppOutWork",
+      onMessageReceived: (JavascriptMessage message)async {
+        String strInOut = "out" ;
+        checkLocationServices(strInOut,(){
+          GroupwareControler groupwareControler = Get.find<GroupwareControler>();
+          groupwareControler.strCommute.value = strInOut ;
+          if(Platform.isIOS){
+            inAndOutWorkshowDialog_ios(context);
+            inAndOutWorkScanns_ios((List<BeaconData> beaconList){
+              groupwareControler.beaconList.value.addAll(beaconList);
+              print("${beaconList.length}라스트 결과물>>>>>>>>${groupwareControler.beaconList.value.length}");
+              groupwareControler.serverSend((type,result,code){
+                print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+                _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+              });
+            });
+            // inAndOutWorkDialog(context,(List<BeaconData> beaconList){
+            //   groupwareControler.beaconList.value.addAll(beaconList);
+            //   print("${beaconList.length}라스트 결과물>>>>>>>>${groupwareControler.beaconList.value.length}");
+            //   groupwareControler.serverSend((type,result,code){
+            //     print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+            //     _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+            //   });
+            // });
+          }else{
+            inAndOutWork(context,(){
+              //groupwareControler.beaconList
+              for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+                print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+              }
+              groupwareControler.serverSend((type,result,code){
+                print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
+                _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
+              });
+            });
+          }
+        });
+      },
+    );
+  }
 
+  checkLocationServices(String inoutCheck, Function function)async{
+    bool checkLocation = await flutterBeacon.checkLocationServicesIfEnabled ;
+    var bluetoothState = await flutterBeacon.bluetoothState ;
+    bool checkBluetooth = (bluetoothState == BluetoothState.stateOn);
+    if(!checkLocation){
+      if (Platform.isAndroid) {
+        _controller.evaluateJavascript('commuteMember(\'${inoutCheck}\',\'fail\',601)');
+        // await showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       return AlertDialog(
+        //         title: Text("위치 서비스 활성화"),
+        //         content: Text("위치 서비스를 활성화해주세요."),
+        //         actions: [
+        //           TextButton(
+        //             onPressed: () async {
+        //               await flutterBeacon.openLocationSettings;
+        //               Navigator.pop(context);
+        //             },
+        //             child: Text("예"),
+        //           ),
+        //           TextButton(
+        //             onPressed: () async {
+        //               Navigator.pop(context);
+        //             },
+        //             child: Text("아니요"),
+        //           ),
+        //         ],
+        //       );
+        //     });
+      } else if (Platform.isIOS) {
+        _controller.evaluateJavascript('commuteMember(\'${inoutCheck}\',\'fail\',601)');
+        // await showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       return AlertDialog(
+        //         title: Text("위치 서비스 활성화"),
+        //         content: Text("위치 서비스를 활성화해주세요."),
+        //         actions: [
+        //           TextButton(
+        //             onPressed: () => Navigator.pop(context),
+        //             child: Text("OK"),
+        //           ),
+        //         ],
+        //       );
+        //     });
+      }
+    }else {
+      var status = await Permission.location.request();
+      if (!status.isGranted) {
+        await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("알림!"),
+                content: Text("위치권한을 허용해주세요!"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      openAppSettings().then((value) {
+                        print('>>>>>>결과값>>>>>>>>>>>>>>>>>>${value}');
+                      });
+                    },
+                    child: Text("예"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("아니요"),
+                  ),
+                ],
+              );
+            });
+      } else {
+        if(Platform.isIOS){
+          if(checkBluetooth){
+            function();
+          }else{
+            _controller.evaluateJavascript('commuteMember(\'${inoutCheck}\',\'fail\',600)');
+          }
+        }else{
+          function();
+        }
+      }
+    }
+  }
   void _checkLogin(String urlString) {
     var url = Uri.parse(urlString);
     var error = url.queryParameters["error"];

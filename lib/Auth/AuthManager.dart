@@ -29,7 +29,6 @@ class AuthManager {
   String? _urlPhoto;
   String? _googleIDToken;
   String? _lastError;
-
   String? get urlPhoto => _urlPhoto;
   String? get googleIDToken => _googleIDToken;
 
@@ -46,6 +45,7 @@ class AuthManager {
 
   Future<GOOGLE_AUTH_RESULT> googleSingIn(String fcmToken) async {
     try {
+      print('111111>>>>>>${fcmToken}');
       // google login
       final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
       if (gUser == null) {

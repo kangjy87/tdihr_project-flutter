@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+	    <key>NSContactsUsageDescription</key>
+        <string>We use access to contacts responsibly</string>
+        <key>NSMotionUsageDescription</key>
+        <string>We use access to motion usage responsibly</string>
+        <key>NSSpeechRecognitionUsageDescription</key>
+        <string>We use access to speech recognition usage responsibly</string>
+        <key>NSCalendarsUsageDescription</key>
+        <string>We use access to Calendars responsibly</string>
+        <key>NSAppleMusicUsageDescription</key>
+        <string>We use access to music responsibly</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
@@ -69,21 +79,23 @@
 		<false/>
 		<key>io.flutter.embedded_views_preview</key>
 		<true/>
-		<!-- todo : beacon/ geofence -->
-		<!-- <key>NSLocationWhenInUseUsageDescription</key>
+
+		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
+		<key>NSBluetoothPeripheralUsageDescription</key>
+        <string>Need BLE permission</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>위치 정보가 필요합니다.</string>
 		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>블루투스를 켜주세요.</string> -->
-		<!-- todo: geofence -->
-		<!-- <key>UIRequiredDeviceCapabilities</key>
+		<string>블루투스를 켜주세요.</string>
+
+		<key>UIRequiredDeviceCapabilities</key>
 		<array>
 			<string>location-services</string>
 			<string>gps</string>
 			<string>armv7</string>
-		</array> -->
+		</array>
 	</dict>
 </plist>

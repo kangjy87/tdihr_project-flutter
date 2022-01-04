@@ -250,7 +250,8 @@ class _TitlePageState extends State<TitlePage> {
 
   Widget _buildBeaconButton() {
     return ElevatedButton(
-      onPressed: () => Get.toNamed(Pages.nameBeacon),
+      // onPressed: () => Get.toNamed(Pages.nameBeacon),
+      onPressed: () => Get.toNamed(Pages.nameBle),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(

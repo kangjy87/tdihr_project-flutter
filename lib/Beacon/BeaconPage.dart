@@ -95,7 +95,7 @@ class BeaconPage extends GetView<BeaconController> {
                 context: context,
                 tiles: BeaconManager().beacons.map((beacon) {
                   return ListTile(
-                    title: Text(beacon.proximityUUID, style: TextStyle(fontSize: 15.0)),
+                    title: Text(beacon.macAddress == null ? "??왜 없음" : beacon.macAddress!, style: TextStyle(fontSize: 15.0)),
                     subtitle: new Row(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
