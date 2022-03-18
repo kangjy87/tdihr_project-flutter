@@ -23,6 +23,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             switch (value) {
               case LOCAL_AUTH_RESULT.SUCCESS:
               case LOCAL_AUTH_RESULT.NO_AUTHORIZE:
+                print('afasdfs>>>>>>>>>>>>>!!!!!!!!!!!!!!!');
                 Get.toNamed(Pages.nameGroupware); // local auth 성공 or local auth가 없으면 groupware page로 이동
                 break;
               case LOCAL_AUTH_RESULT.FAILED:

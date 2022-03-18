@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.tdi.groupware">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools = "http://schemas.android.com/tools"
+	package="com.tdi.groupware">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -9,13 +11,22 @@
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+	<!-- apk 인스톨-->
+	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<!-- todo: geofence -->
 	<!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>	
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>	
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
 
-	<application android:label="TDI Groupware" android:icon="@mipmap/ic_launcher">
-		<activity android:name=".MainActivity" android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize">
+	<application android:label="TDI Groupware"
+		android:icon="@mipmap/ic_launcher"
+		android:usesCleartextTraffic="true"
+		android:requestLegacyExternalStorage="true">
+		<activity android:name=".MainActivity"
+			android:exported="true"
+			android:launchMode="singleTop" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:screenOrientation="portrait" android:windowSoftInputMode="adjustResize">
 			<!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -49,5 +60,50 @@
 		<!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
 		<meta-data android:name="flutterEmbedding" android:value="2" />
+		<provider
+			android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
+			android:authorities="${applicationId}.flutter_downloader.provider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/provider_paths"/>
+		</provider>
+
+		<!-- Begin FlutterDownloader customization -->
+		<!-- disable default Initializer -->
+		<provider
+			android:name="androidx.startup.InitializationProvider"
+			android:authorities="${applicationId}.androidx-startup"
+			android:exported="false"
+			tools:node="merge">
+			<meta-data
+				android:name="androidx.work.WorkManagerInitializer"
+				android:value="androidx.startup"
+				tools:node="remove" />
+		</provider>
+
+		<!-- declare customized Initializer -->
+		<provider
+			android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
+			android:authorities="${applicationId}.flutter-downloader-init"
+			android:exported="false">
+			<meta-data
+				android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
+				android:value="5" />
+		</provider>
+		<!-- End FlutterDownloader customization -->
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths" />
+		</provider>
+		<meta-data
+			android:name="com.google.firebase.messaging.default_notification_channel_id"
+			android:value="high_importance_channel" />
 	</application>
 </manifest>

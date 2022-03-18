@@ -45,6 +45,12 @@ class URL {
 class MESSAGES {
   static String errLoginEmail = "회사메일로 로그인 하세요.";
   static String errLoginFailed = "로그인 실패 했습니다.";
+  static String errAppUpdateTitle = "앱이 업데이트되었습니다.";
+  static String errIosAppUpdateMsg1 = "테스트플라이트에서 새로운 버전의 ";
+  static String errIosAppUpdateMsg2 = "TDI Groupware를 업데이트 해주세요.";
+  static String errAppUpdate = "업데이트를 진행하시겠습니까?";
+  static String errAppUpdateBtn1 = "예";
+  static String errAppUpdateBtn2 = "아니요";
 }
 
 class STRINGS {
@@ -66,7 +72,6 @@ Future<bool?> showToastMessage(String message) {
       textColor: Colors.white,
       toastLength: Toast.LENGTH_SHORT);
 }
-
 void showSnackBar(String title, String message) {
   Get.snackbar(
     title,

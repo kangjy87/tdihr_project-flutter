@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
-
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +20,17 @@ import 'package:hr_project_flutter/General/TDIUser.dart';
 // import 'package:hr_project_flutter/Geofence/LocationService.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
 import 'package:logger/logger.dart';
-
+import 'package:flutter_downloader/flutter_downloader.dart';
 // apk 빌드시 command : flutter build apk --no-sound-null-safety
 
+const debug = true;
+
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //다운로드쪽이  IOS에서 구글로그인쪽 라이브라이브러리랑 충돌남
+  if(Platform.isAndroid){
+    await FlutterDownloader.initialize(debug: debug);
+  }
   if (kReleaseMode == true) {
     Logger.level = Level.error;
   } else {

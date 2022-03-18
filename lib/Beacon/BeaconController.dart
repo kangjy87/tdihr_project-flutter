@@ -35,7 +35,7 @@ class BeaconController extends GetxController {
       )
       ..buildBeaconRegion('BeaconType1', '8fef2e11-d140-2ed1-2eb1-4138edcabe09') // Beacon Device 등록
       ..buildBeaconRegion('BeaconType2', '4d9c357a-0640-11ec-9a03-0242ac130003')
-      ..buildBeaconRegion('BeaconType3', 'fda50693-a4e2-4fb1-afcf-c6eb07647825')
+      ..buildBeaconRegion('BeaconType3', 'FDA50693-A4E2-4FB1-AFCF-C6EB07647821')
       ..initialize();
 
     super.onInit();

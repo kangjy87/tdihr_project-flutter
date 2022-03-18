@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hr_project_flutter/Auth/AuthManager.dart';
 import 'package:hr_project_flutter/BLE/BleManager.dart';
@@ -14,6 +15,7 @@ import 'package:hr_project_flutter/Beacon/InOutWorkIosDialog.dart';
 import 'package:hr_project_flutter/Beacon/inOutWorkDialog.dart';
 import 'package:hr_project_flutter/General/Common.dart';
 import 'package:hr_project_flutter/General/Logger.dart';
+import 'package:hr_project_flutter/General/ShowAlertDialogMessage.dart';
 import 'package:hr_project_flutter/General/TDIUser.dart';
 import 'package:hr_project_flutter/Page/GroupwareControler.dart';
 import 'package:hr_project_flutter/Page/Pages.dart';
@@ -75,26 +77,53 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
         ),
       ),
       // floatingActionButton: _buildFloatingActionButtonOnyIOS(),
+      // floatingActionButton: testiosbeacon(), //비콘테스트용 버튼
     );
   }
-
+  //재민씨폰 테스트 테스트후 삭제
+  Widget testiosbeacon() {
+    return Align(
+      alignment: Alignment(-0.85, 1.0),
+      child: FloatingActionButton(
+        backgroundColor: Colors.black87,
+        child: Icon(Icons.navigate_before),
+        onPressed: (){
+          String strInOut = "out" ;
+          checkLocationServices(strInOut,(){
+            GroupwareControler groupwareControler = Get.find<GroupwareControler>();
+            groupwareControler.strCommute.value = strInOut ;
+            if(Platform.isIOS){
+              inAndOutWorkshowDialog_ios(context);
+              inAndOutWorkScanns_ios((List<BeaconData> beaconList){
+                groupwareControler.beaconList.value.addAll(beaconList);
+                print("${beaconList.length}라스트 결과물>>>>>>>>${groupwareControler.beaconList.value.length}");
+                Get.back();
+              });
+            }else{
+              print('쓰발ㄴㅇㄹㄴㄹㄴㅇㄹㄴㄹㄴㄹㄴㄹ');
+              inAndOutWorkshowDialog_android(context);
+              inAndOutWorkScanns_android((){
+                //groupwareControler.beaconList
+                for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+                  print('마물쓰>>>>>>>>>>>>>>>>>>>${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+                }
+                Get.back();
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
   Widget _buildWebView() {
     return WebView(
       // userAgent: 'random', ios에서 문제 발생 - 주석 처리 함
-      initialUrl: kIsPushLink ? kPushLinkURL : URL.tdiLogin + TDIUser.token!.token,
+      initialUrl: kIsPushLink ? kPushLinkURL : URL.tdiLogin + TDIUser.token!.token +'?os='+ (Platform.isIOS ? "ios" :"aos") + '&app_version='+ kAppVersion,
       onWebViewCreated: (WebViewController webViewController) {
         _controllerComplete.complete(webViewController);
         _controllerComplete.future.then((value) => _controller = value);
       },
-      // javascript channel test
-      // initialUrl: '',
-      // onWebViewCreated: (WebViewController webViewController) async {
-      //   _controllerComplete.complete(webViewController);
-      //   _controllerComplete.future.then((value) => _controller = value);
-      //   await loadHtmlFromAssets(
-      //       'assets/javascriptChannelTest.html', webViewController);
-      // },
-      //
+
       javascriptMode: JavascriptMode.unrestricted,
       gestureNavigationEnabled: true,
       javascriptChannels: <JavascriptChannel>{
@@ -189,9 +218,9 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
             inAndOutWorkshowDialog_android(context);
             inAndOutWorkScanns_android((){
               //groupwareControler.beaconList
-              for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
-                print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
-              }
+              // for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+              //   print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+              // }
               groupwareControler.serverSend((type,result,code){
                 print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
                 _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
@@ -239,11 +268,12 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
             //   });
             // });
           }else{
-            inAndOutWork(context,(){
+            inAndOutWorkshowDialog_android(context);
+            inAndOutWorkScanns_android((){
               //groupwareControler.beaconList
-              for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
-                print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
-              }
+              // for(int i = 0 ; i < groupwareControler.beaconList.value.length; i++){
+              //   print('${groupwareControler.beaconList.value[i].uuid}>>>>${groupwareControler.beaconList.value[i].major}>>>>>${groupwareControler.beaconList.value[i].bssid}');
+              // }
               groupwareControler.serverSend((type,result,code){
                 print('>>>>>>>>구른다.commuteMember(\'${type}\',\'${result}\',\'${code}\')');
                 _controller.evaluateJavascript('commuteMember(\'${type}\',\'${result}\',${code})');
@@ -342,11 +372,32 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
     }
   }
   void _checkLogin(String urlString) {
+    print('adsfasdfasdfaaaaaaaaaaaaaaaaaaaaaaaaaa');
     var url = Uri.parse(urlString);
     var error = url.queryParameters["error"];
     if (error == "unauthenticated") {
       _goTitleAndLogout();
       showToastMessage(MESSAGES.errLoginFailed);
+    }else if(error == "updatable"){
+      Get.toNamed(Pages.nameTitle, arguments: {"UPDATE": true} );
+      // showAlertDialogMessage(
+      //     context,
+      //     MESSAGES.errAppUpdateTitle,
+      //     MESSAGES.errAppUpdate,
+      //     null,
+      //     MESSAGES.errAppUpdateBtn1,
+      //     MESSAGES.errAppUpdateBtn2,
+      //         (){
+      //       //앱 업데이트
+      //       _goTitleAndLogout();
+      //     },
+      //         (){
+      //       //다음에 하기
+      //       Navigator.of(context).pop();
+      //       _controller.loadUrl(kIsPushLink ? kPushLinkURL : URL.tdiLogin + TDIUser.token!.token +'?os='+ (Platform.isIOS ? "ios" :"aos") + '&app_version='+ '1.2.0',);
+      //     }
+      // );
+      // showToastMessage(MESSAGES.errAppUpdateBtn1);
     }
   }
 
@@ -358,7 +409,6 @@ class _GroupwarePageState extends State<GroupwarePage> with WidgetsBindingObserv
           },
         );
   }
-
   Future<bool> _goBack(BuildContext context) async {
     if (await _controller.canGoBack()) {
       _controller.goBack();

@@ -20,6 +20,7 @@ var isScanns = false ;
 inAndOutWork(BuildContext buidContext,Function onServerSend ){
   bool scanningCheck  = false ;
   GroupwareControler groupwareControler =Get.find<GroupwareControler>();
+  groupwareControler.beaconList.value.clear();
   groupwareControler.strServerRequest.value = groupwareControler.strCommute.value == "in" ? "출근 체크중 입니다...":"퇴근 체크중 입니다..." ;
 
   // BLE 스캔 상태 얻기 위한 리스너

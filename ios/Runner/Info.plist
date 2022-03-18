@@ -1,101 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-	    <key>NSContactsUsageDescription</key>
-        <string>We use access to contacts responsibly</string>
-        <key>NSMotionUsageDescription</key>
-        <string>We use access to motion usage responsibly</string>
-        <key>NSSpeechRecognitionUsageDescription</key>
-        <string>We use access to speech recognition usage responsibly</string>
-        <key>NSCalendarsUsageDescription</key>
-        <string>We use access to Calendars responsibly</string>
-        <key>NSAppleMusicUsageDescription</key>
-        <string>We use access to music responsibly</string>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>TDI Groupware</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>hr_project_flutter</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>com.googleusercontent.apps.153404377469-8hipkl5cqd6magt8pl3qnnjev1mgkug2</string>
-				</array>
-			</dict>
-		</array>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>NSAppTransportSecurity</key>
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>TDI Groupware</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>hr_project_flutter</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
 		<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true/>
-			<key>NSAllowsArbitraryLoadsInWebContent</key>
-			<true/>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.153404377469-8hipkl5cqd6magt8pl3qnnjev1mgkug2</string>
+			</array>
 		</dict>
-		<key>NSFaceIDUsageDescription</key>
-		<string>본인 인증을 완료해 주세요.</string>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>		
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>location</string>
-		</array>
-		<key>UIStatusBarHidden</key>
-		<false/>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationPortraitUpsideDown</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-		<key>io.flutter.embedded_views_preview</key>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>위치 정보가 필요합니다.</string>
-		<key>NSBluetoothPeripheralUsageDescription</key>
-        <string>Need BLE permission</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>위치 정보가 필요합니다.</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>위치 정보가 필요합니다.</string>
-		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>블루투스를 켜주세요.</string>
-
-		<key>UIRequiredDeviceCapabilities</key>
-		<array>
-			<string>location-services</string>
-			<string>gps</string>
-			<string>armv7</string>
-		</array>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We use access to music responsibly</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>블루투스를 켜주세요.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need BLE permission</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We use access to Calendars responsibly</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We use access to contacts responsibly</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>본인 인증을 완료해 주세요.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>위치 정보가 필요합니다.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>위치 정보가 필요합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>위치 정보가 필요합니다.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>We use access to motion usage responsibly</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We use access to speech recognition usage responsibly</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>location-services</string>
+		<string>gps</string>
+		<string>armv7</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>FDMaximumConcurrentTasks</key>
+    <integer>5</integer>
+    <key>FDAllFilesDownloadedMessage</key>
+    <string>All files have been downloaded</string>
+</dict>
 </plist>

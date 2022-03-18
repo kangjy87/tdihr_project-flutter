@@ -6,26 +6,34 @@ class TDIAccount {
   final String email;
   final String name;
   final String os;
+  final String appversion;
 
-  TDIAccount(this.provider, this.token, this.email, this.name, this.os);
+  TDIAccount(this.provider, this.token, this.email, this.name, this.os,this.appversion);
 
   TDIAccount.formJson(Map<String, dynamic> json)
       : provider = json["provider"],
         token = json["token"],
         email = json["email"],
         name = json["name"],
-        os = json["os"];
+        os = json["os"],
+        appversion = json["app_version"];
 
-  Map<String, dynamic> toJson() => {"provider": provider, "token": token, "email": email, "name": name, "os": os};
+  Map<String, dynamic> toJson() => {"provider": provider, "token": token, "email": email, "name": name, "os": os, "app_version": appversion};
 }
 
 class TDIToken {
   final String token;
+  final String app_version ;
+  final String app_path ;
 
-  TDIToken(this.token);
+  TDIToken(this.token, this.app_path, this.app_version);
 
-  TDIToken.formJson(Map<String, dynamic> json) : token = json["token"];
-  Map<String, dynamic> toJson() => {"token": token};
+  TDIToken.formJson(Map<String, dynamic> json)
+      : token = json["token"],
+        app_version = json["app_version"],
+        app_path = json["app_path"];
+
+  Map<String, dynamic> toJson() => {"token": token, "app_version": app_version, "app_path": app_path,};
 }
 
 class TDIUser {
